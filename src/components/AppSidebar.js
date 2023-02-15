@@ -11,14 +11,13 @@ import { sygnet } from 'src/assets/brand/sygnet'
 
 import SimpleBar from 'simplebar-react'
 import 'simplebar/dist/simplebar.min.css'
-
+import { setSidebarShow, setSidebarUnfoldable } from '../stores/global'
 // sidebar nav config
 import navigation from '../_nav'
 
 const AppSidebar = () => {
   const dispatch = useDispatch()
-  const unfoldable = useSelector((state) => state.sidebarUnfoldable)
-  const sidebarShow = useSelector((state) => state.sidebarShow)
+  const { unfoldable, sidebarShow } = useSelector((state) => state.global)
 
   return (
     <CSidebar
@@ -26,7 +25,7 @@ const AppSidebar = () => {
       unfoldable={unfoldable}
       visible={sidebarShow}
       onVisibleChange={(visible) => {
-        dispatch({ type: 'set', sidebarShow: visible })
+        dispatch(setSidebarShow(visible))
       }}
     >
       <CSidebarBrand className="d-none d-md-flex" to="/">
@@ -40,7 +39,7 @@ const AppSidebar = () => {
       </CSidebarNav>
       <CSidebarToggler
         className="d-none d-lg-flex"
-        onClick={() => dispatch({ type: 'set', sidebarUnfoldable: !unfoldable })}
+        onClick={() => dispatch(setSidebarUnfoldable(!unfoldable))}
       />
     </CSidebar>
   )
