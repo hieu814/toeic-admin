@@ -1,8 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-export const api = createApi({
+export const authApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: `${process.env.REACT_APP_BACKEND_URL}/admin/auth/` }),
   reducerPath: "authApi",
+
   endpoints: (build) => ({
     register: build.mutation({
       query: (credentials) => ({
@@ -47,6 +48,11 @@ export const api = createApi({
       invalidatesTags: ["User"],
     }),
   }),
+  extraReducers: (builder) => {
+    builder.addMatcher(authApi.endpoints.login.matchFulfilled, (state, action) => {
+      state.currentUser = action.payload; // assuming the login response contains the user data
+    });
+  },
 });
 
 export const {
@@ -56,4 +62,4 @@ export const {
   useValidateResetPasswordOtpMutation,
   useResetPasswordMutation,
   useLogoutMutation,
-} = api;
+} = authApi;

@@ -1,14 +1,17 @@
 import { configureStore,getDefaultMiddleware } from '@reduxjs/toolkit'
 import global from '../stores/global'
-import { api } from 'src/api/auth';
+import { authApi } from 'src/api/auth';
+import { usersApi } from 'src/api/user';
 const rootReducer = {
-  [api.reducerPath]: api.reducer,
+  [authApi.reducerPath]: authApi.reducer,
+  [usersApi.reducerPath]: usersApi.reducer,
   global,
 }
 
 const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
-  getDefaultMiddleware().concat(api.middleware),
+  getDefaultMiddleware().concat(authApi.middleware,usersApi.middleware),
 })
 export default store
+

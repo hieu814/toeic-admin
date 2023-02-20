@@ -2,12 +2,12 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 const BASE_URL = `${process.env.REACT_APP_BACKEND_URL}`;
 
-const api = createApi({
+export const usersApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: BASE_URL,
-    prepareHeaders: (headers) => {
+    prepareHeaders: (headers,{ getState }) => {
       const token = localStorage.getItem("token");;
-      console.log("----token ", token);
+      // console.log("----getState ", JSON.stringify(getState().authApi.currentUser));
       if (token) {
         headers.set('Authorization', `Bearer ${token}`);
       }
@@ -129,4 +129,4 @@ export const {
   useDeleteManyUserMutation,
   useChangePasswordMutation,
   useUpdateProfileMutation
-} = api;
+} = usersApi;
