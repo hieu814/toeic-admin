@@ -49,9 +49,11 @@ export const authApi = createApi({
     }),
   }),
   extraReducers: (builder) => {
-    builder.addMatcher(authApi.endpoints.login.matchFulfilled, (state, action) => {
-      state.currentUser = action.payload; // assuming the login response contains the user data
-    });
+    console.log("adads bui");
+    builder.addCase('authApi/login/fulfilled', (state, action) => {
+      console.log("ASasd");
+      state.user = action.payload
+    })
   },
 });
 

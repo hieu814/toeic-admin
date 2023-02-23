@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link,useNavigate  } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   CButton,
   CCard,
@@ -16,7 +16,7 @@ import {
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
 import { useDispatch, useSelector } from 'react-redux';
-import { setIsLogin } from 'src/stores/global';
+import { setCurrentUser, setIsLogin } from 'src/stores/global';
 import { useState } from 'react';
 import { useLoginMutation } from 'src/api/auth';
 const Login = () => {
@@ -24,33 +24,34 @@ const Login = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const { isLogin } = useSelector((state) => state.global);
-  const [login, { isLoading, error }] = useLoginMutation();
+  const [error, setError] = useState('');
+  const { isLogin, user } = useSelector((state) => state.global);
+  const [login, { isLoading }] = useLoginMutation();
 
   const handleSubmit = (e) => {
-    console.log(process.env.REACT_APP_BACKEND_URL);
+    setError('')
     e.preventDefault();
-    
+
     login({ username, password })
       .unwrap()
       .then((respond) => {
-        
-        const {token} = respond.data
-        console.log(token);
-        localStorage.setItem("token", token);
-        dispatch( setIsLogin(true))
+
+        dispatch(setCurrentUser(respond.data))
+        console.log(user);
+        dispatch(setIsLogin(true))
         navigate('/dashboard');
-        
+
       })
       .catch((err) => {
-        console.log(err);
-        localStorage.removeItem("token");
-        dispatch( setIsLogin(false))
+        setError(err.data.message)
+        dispatch(setCurrentUser(null))
+        dispatch(setIsLogin(false))
       });
   };
 
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
+      <b>{`asdasdds ${isLogin}`}</b>
       <CContainer>
         <CRow className="justify-content-center">
           <CCol md={8}>
@@ -92,7 +93,7 @@ const Login = () => {
                       </CCol>
                       <CCol xs={6} className="text-right">
                         <CButton color="link" className="px-0">
-                          Forgot password? 
+                          Forgot password?
                         </CButton>
                       </CCol>
                     </CRow>

@@ -5,9 +5,11 @@ const BASE_URL = `${process.env.REACT_APP_BACKEND_URL}`;
 export const usersApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: BASE_URL,
-    prepareHeaders: (headers,{ getState }) => {
-      const token = localStorage.getItem("token");;
-      // console.log("----getState ", JSON.stringify(getState().authApi.currentUser));
+    prepareHeaders: (headers, { getState }) => {
+      const { token } = getState().global.user;
+
+
+      console.log("----getState ");
       if (token) {
         headers.set('Authorization', `Bearer ${token}`);
       }

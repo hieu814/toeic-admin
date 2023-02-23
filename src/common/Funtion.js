@@ -25,12 +25,15 @@ function buidQuery(options) {
         }
 
     }
-    console.log(JSON.stringify(query));
+    if (options.queryField) {
+        var tmp = Object.fromEntries(Object.entries(options.queryField).filter(([_, v]) => v != null))
+        Object.assign(query.query, tmp);
+    }
     return query;
 
 }
 function getPaginator(res) {
-    console.log(res?.data?.data);
+
     if (res?.status === "SUCCESS" && res?.data?.paginator) {
         return res.data.paginator
     }
@@ -48,4 +51,9 @@ function getPaginator(res) {
     }
 
 }
-export { buidQuery, getPaginator }
+function removeUndefined(params) {
+    return Object.fromEntries(
+        Object.entries(params).filter(([key, value]) => value !== undefined)
+    );
+}
+export { buidQuery, getPaginator, removeUndefined }

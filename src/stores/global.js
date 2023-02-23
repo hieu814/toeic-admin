@@ -10,7 +10,7 @@ const globalSlice = createSlice({
     unfoldable: false,
     isLoading: false,
     isLogin: false,
-    user: {},
+    user: null,
   },
 
   reducers: {
@@ -27,6 +27,7 @@ const globalSlice = createSlice({
       state.unfoldable = action.payload;
     },
     setCurrentUser: (state, action) => {
+      console.log(action.payload);
       state.user = action.payload;
     },
   },
