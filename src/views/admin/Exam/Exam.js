@@ -1,40 +1,42 @@
 import React, { useEffect, useState } from "react";
-import { Space, Select, Input, Button, Card, Modal, message } from "antd";
-import { useFindAllUserMutation, useAddUserMutation, useDeleteUserMutation } from "src/api/user";
-import PropTypes from "prop-types";
-import DataTable from "react-data-table-component";
-import MyTable from "./components/UserTable";
+import { Space, Select, Input, Button, Card, message } from "antd";
+import { useDeleteExamMutation, useFindAllExamMutation } from "src/api/exam";
+import MyTable from "./components/ExamTable";
 import { buidQuery, getPaginator } from "src/common/Funtion";
-import UserModal from "./components/UserModal";
+import ExamModal from "./components/ExamModal";
+import { useFindAllExamCategoriesMutation } from "src/api/exam_category";
 const { Option } = Select;
 
 
 
-const UserManagementPage = () => {
+const ExamManagementPage = () => {
     const [page, setPage] = useState(1)
-    const [totalPage, setTotalPage] = useState(1)
     const [rowsPerPage, setRowsPerPage] = useState(10)
-    const [findAllUsers, { data, isLoading, isError }] = useFindAllUserMutation();
-    const [deleteUser] = useDeleteUserMutation();
+    const [findAllExams, { data, isLoading, isError }] = useFindAllExamMutation();
+    const [deleteExam] = useDeleteExamMutation();
+    const [findAllExamCategorys, { data: categotyData }] = useFindAllExamCategoriesMutation();
     const [currentData, setCurrentData] = useState(null)
     const [isModalVisible, setIsModalVisible] = useState(false)
     const [isInsert, setIsInsert] = useState(false)
-    const [role, setRole] = useState("");
+    const [type, setType] = useState("");
     const [search, setSearch] = useState("");
 
     useEffect(() => {
-        // Call the findAllUsers function with the search and role filter parameters
         loadData()
 
-    }, [findAllUsers, search, role, rowsPerPage]);
+    }, [findAllExams, search, type, rowsPerPage]);
     const loadData = () => {
         try {
-            findAllUsers(buidQuery({
-                searchField: ["username", "email", "name"],
+            findAllExamCategorys(buidQuery({
+                page: 1,
+                rowsPerPage: 100,
+            }))
+            findAllExams(buidQuery({
+                searchField: ["name"],
                 search: search,
-                queryField: {
-                    userType: role
-                },
+                // queryField: {
+                //     type: type
+                // },
                 page: page,
                 rowsPerPage: rowsPerPage,
             }));
@@ -43,16 +45,15 @@ const UserManagementPage = () => {
         }
 
     }
-    const handleRoleChange = (value) => {
-        setRole(value);
+    const handleTypeChange = (value) => {
+        setType(value);
     };
 
     const handleSearch = (e) => {
         setSearch(e);
     };
     function handleDelete(params) {
-        setIsModalVisible(false)
-        deleteUser(params.id)
+        deleteExam(params.id)
             .unwrap()
             .then((respond) => {
                 message.success(respond.message)
@@ -76,26 +77,27 @@ const UserManagementPage = () => {
 
     }
     function handleCalcel(params) {
+        loadData()
         setCurrentData({})
         setIsModalVisible(false)
 
     }
     return (
 
-        <Card title={`User Management `}>
-
+        <Card title={`Exam Management`}>
             <Space>
                 <Select
                     defaultValue={1}
                     style={{ width: 120 }}
-                    onChange={handleRoleChange}
+                    onChange={handleTypeChange}
                 >
-                    <Option value={null}>All User</Option>
-                    <Option value={2}>Admin</Option>
-                    <Option value={1}>User</Option>
+                    {(categotyData?.data?.data || []).map(fbb =>
+                        <Option key={fbb.key} value={fbb.id}>{fbb.name}</Option>
+                    )};
+
                 </Select>
                 <Input.Search
-                    placeholder="Search by username or email"
+                    placeholder="Search by name"
                     onChange={(e) => {
                         if (!e.target.value)
                             setSearch("")
@@ -104,7 +106,7 @@ const UserManagementPage = () => {
                     style={{ width: 300 }}
                 />
                 <Button type="primary" onClick={handleInsert}>
-                    Add User
+                    Add Category
                 </Button>
             </Space>
             <MyTable
@@ -114,13 +116,15 @@ const UserManagementPage = () => {
                 handleDelete={handleDelete}
                 handleUpdate={handleUpdate}
                 handleChangeRowPerPage={setRowsPerPage}
+                handleChangePage = {setPage}
 
             />
-            <UserModal
+            <ExamModal
                 visible={isModalVisible}
                 isInsert={isInsert}
                 data={currentData}
                 onCancel={handleCalcel}
+                category={(categotyData?.data?.data || [])}
 
             />
         </Card>
@@ -128,4 +132,4 @@ const UserManagementPage = () => {
     );
 }
 
-export default UserManagementPage;
+export default ExamManagementPage;

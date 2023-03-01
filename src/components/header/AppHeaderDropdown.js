@@ -23,8 +23,20 @@ import {
 import CIcon from '@coreui/icons-react'
 
 import avatar8 from './../../assets/images/avatars/8.jpg'
+import { store } from 'src/stores/store'
+import { setIsLogin } from 'src/stores/global'
+import { useDispatch, useSelector } from 'react-redux'
 
 const AppHeaderDropdown = () => {
+  const dispatch = useDispatch();
+  const { isLogin, user } = useSelector((state) => state.global);
+  const logout = () => {
+    localStorage.clear()
+    Object.keys(store.getState()).forEach((reducerKey) => {
+      store.dispatch({ type: `${reducerKey}/reset` })
+    })
+    dispatch(setIsLogin(false))
+  }
   return (
     <CDropdown variant="nav-item">
       <CDropdownToggle placement="bottom-end" className="py-0" caret={false}>
@@ -80,12 +92,14 @@ const AppHeaderDropdown = () => {
           <CIcon icon={cilFile} className="me-2" />
           Projects
           <CBadge color="primary" className="ms-2">
-            42
+            {`is login ${isLogin}`}
           </CBadge>
         </CDropdownItem>
         <CDropdownDivider />
         <CDropdownItem href="#">
-          <CIcon icon={cilLockLocked} className="me-2" />
+          <CIcon icon={cilLockLocked} className="me-2" onClick={() => {
+            logout()
+          }} />
           Lock Account
         </CDropdownItem>
       </CDropdownMenu>

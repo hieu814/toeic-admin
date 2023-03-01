@@ -2,8 +2,9 @@ import React, { useEffect } from 'react';
 import { Modal, Form, Input, Button, message, Spin, Switch, Select } from 'antd';
 import PropTypes from 'prop-types';
 
-import { useAddExamCategoryMutation, useUpdateExamCategoryMutation } from 'src/api/exam_category';
+import { useAddExamMutation, useUpdateExamMutation } from 'src/api/exam';
 import { removeUndefined } from 'src/common/Funtion';
+import CustomUpload from 'src/components/CustomUpload';
 const { Option } = Select;
 
 const formItemLayout = {
@@ -24,21 +25,21 @@ const formItemLayout = {
         },
     },
 };
-const CategoryModal = (props) => {
-    const { isInsert, visible, onCancel, data, onUpdate } = props
+const ExamModal = (props) => {
+    const { isInsert, visible, onCancel, data, category } = props
     const [form] = Form.useForm();
-    const [addCategory, { error: insertError, isLoading: insertLoading = false }] = useAddExamCategoryMutation();
-    const [updateCategory, { error: updateError, isLoading: updateLoading = false }] = useUpdateExamCategoryMutation();
+    const [addExam, { error: insertError, isLoading: insertLoading = false }] = useAddExamMutation();
+    const [updateExam, { error: updateError, isLoading: updateLoading = false }] = useUpdateExamMutation();
     const onFinish = async (values) => {
         values = removeUndefined(values)
-
+        console.log(values);
         if (isInsert) {
-            addCategory(values)
+            addExam(values)
                 .then((respond) => {
 
                     console.log(respond);
                     message.success(respond.message)
-                    handleCalcel()
+                    // handleCalcel()
                 })
                 .catch((err) => {
                     console.log(err);
@@ -46,7 +47,7 @@ const CategoryModal = (props) => {
                 });
         } else {
             values.id = data?.id
-            updateCategory(values)
+            updateExam(values)
                 .unwrap()
                 .then((respond) => {
                     message.success(respond.message)
@@ -68,9 +69,10 @@ const CategoryModal = (props) => {
     }, [form, data])
     return (
         <Modal
+            getContainer={false}
             centered
             open={visible}
-            title={`${isInsert ? "Insert" : "Update"} Category ${data?.email}`}
+            title={`${isInsert ? "Insert" : "Update"} Exam`}
             onCancel={handleCalcel}
             footer={[
                 <Button key="cancel" onClick={handleCalcel}>
@@ -82,8 +84,8 @@ const CategoryModal = (props) => {
             ]}
         >
             <Spin spinning={insertLoading || updateLoading}>
-                {(updateError || insertError) && <div style={{ color: 'red', marginBottom: 10 }}>{`${isInsert ? insertError?.data.message : updateError?.data.message}`}</div>}
-                <Form forceRender  id='form-id'
+                {(updateError || insertError) && <div style={{ color: 'red', marginBottom: 10 }}>{`${isInsert ? insertError?.data?.message : updateError?.data.message}`}</div>}
+                <Form id='form-id'
                     {...formItemLayout}
                     form={form}
                     name="register"
@@ -101,7 +103,7 @@ const CategoryModal = (props) => {
                         rules={[
                             {
                                 required: true,
-                                message: 'Please input Categoryname!',
+                                message: 'Please input Examname!',
                                 whitespace: true,
                             },
                         ]}
@@ -109,8 +111,8 @@ const CategoryModal = (props) => {
                         <Input />
                     </Form.Item>
                     <Form.Item
-                        name="type"
-                        label="Type"
+                        name="category"
+                        label="Category"
                         rules={[
                             {
                                 required: isInsert,
@@ -119,9 +121,14 @@ const CategoryModal = (props) => {
                         ]}
                     >
                         <Select placeholder="select type">
-                            <Option value={2}>Article</Option>
-                            <Option value={1}>Lession</Option>
+                            {(category || []).map(fbb =>
+                                <Option key={fbb.key} value={fbb.id}>{fbb.name}</Option>
+                            )};
                         </Select>
+                    </Form.Item>
+
+                    <Form.Item name="image" label="Image">
+                        // upload image here and can preview
                     </Form.Item>
                     <Form.Item name="isActive" label="Active" valuePropName="checked">
                         <Switch />
@@ -131,13 +138,14 @@ const CategoryModal = (props) => {
         </Modal>
     );
 };
-CategoryModal.propTypes = {
+ExamModal.propTypes = {
     onCancel: PropTypes.func,
     onUpdate: PropTypes.func,
     visible: PropTypes.bool,
-    onCategoryUpdated: PropTypes.func,
+    onExamUpdated: PropTypes.func,
     data: PropTypes.any,
     isLoading: PropTypes.bool,
-    isInsert: PropTypes.bool
+    isInsert: PropTypes.bool,
+    category: PropTypes.array
 }
-export default CategoryModal;
+export default ExamModal;

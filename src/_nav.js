@@ -37,6 +37,31 @@ const _nav = [
     icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
   },
   {
+    component: CNavGroup,
+    name: 'Exam',
+    to: '/exam',
+    icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'exam',
+        to: '/exam',
+      },
+      {
+        component: CNavItem,
+        name: 'Category',
+        to: '/exam/category',
+      },
+      
+    ],
+  },
+  {
+    component: CNavItem,
+    name: 'Docs',
+    href: 'https://coreui.io/react/docs/templates/installation/',
+    icon: <CIcon icon={cilDescription} customClassName="nav-icon" />,
+  },
+  {
     component: CNavItem,
     name: 'Typography',
     to: '/theme/typography',

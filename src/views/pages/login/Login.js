@@ -47,11 +47,12 @@ const Login = () => {
         dispatch(setCurrentUser(null))
         dispatch(setIsLogin(false))
       });
+      // dispatch(setIsLogin(false))
   };
 
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
-      <b>{`asdasdds ${isLogin}`}</b>
+      {/* <b>{`${isLogin} ${error}`}</b> */}
       <CContainer>
         <CRow className="justify-content-center">
           <CCol md={8}>

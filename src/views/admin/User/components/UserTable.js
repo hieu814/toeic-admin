@@ -45,7 +45,7 @@ export default function MyTable(props) {
                     <>
                         <Popconfirm
                             title="Are you sure you want to delete this record?"
-                            onConfirm={() => handleUpdate(record)}
+                            // onConfirm={() => handleUpdate(record)}
                             okText="Yes"
                             cancelText="No"
                         >

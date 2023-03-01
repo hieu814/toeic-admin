@@ -50,11 +50,11 @@ const UserModal = (props) => {
                 .unwrap()
                 .then((respond) => {
                     message.success(respond.message)
+                    console.log(`updated: ${JSON.stringify(respond)}`);
                     handleCalcel()
                 })
                 .catch((err) => {
                     console.log(err);
-
                 });
         }
 
