@@ -1,52 +1,50 @@
 
-import { PlusOutlined } from '@ant-design/icons';
-import { Modal, Upload, Form } from 'antd';
-import React, { useCallback, useState } from 'react';
+import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import { message, Upload } from 'antd';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-const getBase64 = (file) =>
-    new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = (error) => reject(error);
-    });
-
-const CustomUpload = ({ fileList = [], onPreview, onChange, max }) => {
-    const [previewOpen, setPreviewOpen] = useState(false);
-    const [previewImage, setPreviewImage] = useState('');
-    const [previewTitle, setPreviewTitle] = useState('');
-
-    const handleCancel = () => setPreviewOpen(false);
-
-    const handlePreview = async (file) => {
-        if (!file.url && !file.preview) {
-            file.preview = await getBase64(file.originFileObj);
-        }
-        setPreviewImage(file.url || file.preview);
-        setPreviewOpen(true);
-        setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
-    };
-    const handleChange = useCallback((info) => {
+import { getUrlfromUploadRespond } from 'src/common/Funtion';
+const getBase64 = (img, callback) => {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => callback(reader.result));
+    reader.readAsDataURL(img);
+};
+const beforeUpload = (file) => {
+    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+    if (!isJpgOrPng) {
+        message.error('You can only upload JPG/PNG file!');
+    }
+    const isLt2M = file.size / 1024 / 1024 < 2;
+    if (!isLt2M) {
+        message.error('Image must smaller than 2MB!');
+    }
+    return isJpgOrPng && isLt2M;
+};
+const CustomUpload = (props) => {
+    const { onChange, value } = props;
+    const [loading, setLoading] = useState(false);
+    const [imageUrl, setImageUrl] = useState();
+    const handleChange = (info) => {
+        console.log(info);
         if (info.file.status === 'uploading') {
-            // setImage({ loading: true, image: null });
-            info.file.status = 'done';
+            setLoading(true);
+            return;
         }
         if (info.file.status === 'done') {
-            console.log(JSON.stringify(info.file.respond));
-            // getBase64(info.file.originFileObj, (imageUrl) => {
-            //     const img = new Image();
-            //     img.src = imageUrl;
-            //     img.addEventListener('load', function () {
-                    
-            //         // setImage({ loading: false, image: imageUrl });
-            //         // setFileList([{ ...info.fileList[0] }]);
-            //     });
-            // });
+            // Get this url from response in real world.
+            getBase64(info.file.originFileObj, (url) => {
+                setLoading(false);
+                setImageUrl(url);
+
+            });
+            var urls = getUrlfromUploadRespond(info.file.response) || [""]
+            console.log("vluess",value);
+            onChange(urls[0]?.path || "")
         }
-    }, []);
+    };
     const uploadButton = (
         <div>
-            <PlusOutlined />
+            {loading ? <LoadingOutlined /> : <PlusOutlined />}
             <div
                 style={{
                     marginTop: 8,
@@ -56,34 +54,36 @@ const CustomUpload = ({ fileList = [], onPreview, onChange, max }) => {
             </div>
         </div>
     );
-
     return (
-        <div>
+        <>
             <Upload
-                action="http://localhost:5000/admin/upload"
+                // name="avatar"
                 listType="picture-card"
-                fileList={fileList}
-                onPreview={onPreview || handlePreview}
+                className="avatar-uploader"
+                showUploadList={false}
+                action="http://localhost:5000/admin/upload"
+                beforeUpload={beforeUpload}
                 onChange={handleChange}
             >
-                {fileList.length >= max ? null : uploadButton}
+                {value ? (
+                    <img
+                        src={`${process.env.REACT_APP_BACKEND_URL}${value}`}
+                        alt="avatar"
+                        style={{
+                            width: 80,
+                            height: 80
+                        }}
+                    />
+                ) : (
+                    uploadButton
+                )}
             </Upload>
-            <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
-                <img
-                    alt="example"
-                    style={{
-                        width: '100%',
-                    }}
-                    src={previewImage}
-                />
-            </Modal>
-        </div>
+
+        </>
     );
 };
 CustomUpload.propTypes = {
     onChange: PropTypes.func,
-    onPreview: PropTypes.func,
-    fileList: PropTypes.array,
-    max: PropTypes.number
+    value: PropTypes.any
 }
 export default CustomUpload;

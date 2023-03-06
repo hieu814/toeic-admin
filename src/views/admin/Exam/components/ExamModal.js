@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
-import { Modal, Form, Input, Button, message, Spin, Switch, Select } from 'antd';
+import { Modal, Form, Input, Button, message, Spin, Switch, Select, Upload } from 'antd';
 import PropTypes from 'prop-types';
 
 import { useAddExamMutation, useUpdateExamMutation } from 'src/api/exam';
 import { removeUndefined } from 'src/common/Funtion';
 import CustomUpload from 'src/components/CustomUpload';
+import { UploadOutlined } from '@ant-design/icons';
 const { Option } = Select;
 
 const formItemLayout = {
@@ -58,12 +59,20 @@ const ExamModal = (props) => {
 
                 });
         }
+        handleCalcel()
 
     };
     function handleCalcel() {
         form.resetFields();
         onCancel()
     }
+    const beforeUpload = (file) => {
+        const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
+        if (!isJpgOrPng) {
+            message.error("You can only upload JPG/PNG file!");
+        }
+        return isJpgOrPng;
+    };
     useEffect(() => {
         form.setFieldsValue(data)
     }, [form, data])
@@ -126,11 +135,20 @@ const ExamModal = (props) => {
                             )};
                         </Select>
                     </Form.Item>
-
-                    <Form.Item name="image" label="Image">
-                        // upload image here and can preview
+                    <Form.Item
+                        name="image"
+                        label="Image"
+                        rules={[
+                            {
+                                required: isInsert,
+                                message: 'Please select type!',
+                            },
+                        ]}
+                    >
+                        <CustomUpload/>
                     </Form.Item>
-                    <Form.Item name="isActive" label="Active" valuePropName="checked">
+
+                    <Form.Item name="isActive" label="Activádasde" valuePropName="checked">
                         <Switch />
                     </Form.Item>
                 </Form>

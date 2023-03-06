@@ -56,4 +56,8 @@ function removeUndefined(params) {
         Object.entries(params).filter(([key, value]) => value !== undefined)
     );
 }
-export { buidQuery, getPaginator, removeUndefined }
+function getUrlfromUploadRespond(response) {
+    const data = response?.data?.uploadSuccess;
+    return data
+}
+export { buidQuery, getPaginator, removeUndefined ,getUrlfromUploadRespond}

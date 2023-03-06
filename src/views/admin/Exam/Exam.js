@@ -66,13 +66,14 @@ const ExamManagementPage = () => {
     }
     function handleInsert(params) {
         setIsInsert(true)
-        setCurrentData({})
+        setCurrentData({image: "asdadsa"})
         setIsModalVisible(true)
     }
     function handleUpdate(params) {
 
         setIsInsert(false)
         setCurrentData(params)
+        console.log(params);
         setIsModalVisible(true)
 
     }
