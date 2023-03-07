@@ -20,17 +20,30 @@ export default function MyTable(props) {
     } = props;
     const columns = [
         {
+            name: 'ID',
+            selector: (row, i) => row.id,
+            sortable: true,
+        },
+        {
             name: 'Name',
             selector: (row, i) => row.name,
             sortable: true,
         },
 
         {
-            title: "Type",
-            dataIndex: "type",
-            key: "type",
-            render: (role) => (
-                <Tag color={role === 1 ? "red" : "blue"}>{role}</Tag>
+            name: 'Image',
+            cell: (row) => (
+                <img src={`${process.env.REACT_APP_BACKEND_URL}${row?.image}`}
+                    onError={(e) => {
+                        e.target.src = "https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg";
+                    }}
+                    style={{
+                        width: 80,
+                        height: 80,
+                        margin: '10px',
+                        borderRadius: '10%'
+                    }}
+                />
             ),
         },
         {

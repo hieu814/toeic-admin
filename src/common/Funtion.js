@@ -29,6 +29,7 @@ function buidQuery(options) {
         var tmp = Object.fromEntries(Object.entries(options.queryField).filter(([_, v]) => v != null))
         Object.assign(query.query, tmp);
     }
+    console.log(query);
     return query;
 
 }

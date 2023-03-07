@@ -20,21 +20,36 @@ export default function MyTable(props) {
     } = props;
     const columns = [
         {
-            name: 'Username',
-            selector: 'username',
+            name: 'ID',
+            selector: (row, i) => row.id,
             sortable: true,
         },
         {
-            name: 'Email',
-            selector: 'email',
+            name: 'Name',
+            selector: (row, i) => row.name,
             sortable: true,
         },
         {
-            name: "Role",
-            selector: 'role',
+            name: 'Image',
             cell: (row) => (
-                <Tag color={row?.role === 1 ? "red" : "blue"}>{role}</Tag>
-            )
+                <img src={`${process.env.REACT_APP_BACKEND_URL}${row?.image}`}
+                    onError={(e) => {
+                        e.target.src = "https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg";
+                    }}
+                    style={{
+                        width: 80,
+                        height: 80,
+                        margin: '10px',
+                        borderRadius: '10%'
+                    }}
+                />
+            ),
+        },
+        {
+            name: 'Type',
+            cell: (row) => (
+                <Tag color={row?.type === 1 ? "red" : "blue"}>{row?.type === 1 ? "Lession" : "Article"}</Tag>
+            ),
         },
         {
             name: 'Actions',
@@ -44,11 +59,11 @@ export default function MyTable(props) {
                     <>
                         <Popconfirm
                             title="Are you sure you want to delete this record?"
-                            onConfirm={() => handleUpdate(record)}
+                            onConfirm={() => handleDelete(record)}
                             okText="Yes"
                             cancelText="No"
                         >
-                            <DeleteOutlined style={{ color: "#FF0000" }} onClick={() => handleDelete(record)} />
+                            <DeleteOutlined style={{ color: "#FF0000" }} />
                         </Popconfirm>
 
                         <EditOutlined onClick={() => handleUpdate(record)} />

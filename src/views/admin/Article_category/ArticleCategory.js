@@ -1,36 +1,36 @@
 import React, { useEffect, useState } from "react";
 import { Space, Select, Input, Button, Card, message } from "antd";
-import { useDeleteExamCategoryMutation, useFindAllExamCategoriesMutation } from "src/api/exam_category";
-import MyTable from "./components/ExamCategoryTable";
+import { useDeleteArticleCategoryMutation, useFindAllArticleCategoriesMutation } from "src/api/article_category";
+import MyTable from "./components/ArticleCategoryTable";
 import { buidQuery, getPaginator } from "src/common/Funtion";
-import ExamCategoryModal from "./components/ExamCategoryModal";
+import ArticleCategoryModal from "./components/ArticleCategoryModal";
 const { Option } = Select;
 const defaultData = {
-    name:"",
-    description:"",
-    image:""
+    name: "",
+    description: "",
+    image: ""
 }
 
 
-const ExamCategoryManagementPage = () => {
+const ArticleCategoryManagementPage = () => {
     const [page, setPage] = useState(1)
     const [totalPage, setTotalPage] = useState(1)
     const [rowsPerPage, setRowsPerPage] = useState(10)
-    const [findAllExamCategorys, { data, isLoading, isError }] = useFindAllExamCategoriesMutation();
-    const [deleteCategory, { deleteLoading }] = useDeleteExamCategoryMutation();
+    const [findAllArticleCategorys, { data, isLoading, isError }] = useFindAllArticleCategoriesMutation();
+    const [deleteCategory, { deleteLoading }] = useDeleteArticleCategoryMutation();
     const [currentData, setCurrentData] = useState(null)
     const [isModalVisible, setIsModalVisible] = useState(false)
     const [isInsert, setIsInsert] = useState(false)
-    const [type, setType] = useState("");
+    const [type, setType] = useState(1);
     const [search, setSearch] = useState("");
 
     useEffect(() => {
         loadData()
 
-    }, [findAllExamCategorys, search, type, rowsPerPage]);
+    }, [findAllArticleCategorys, search, type, rowsPerPage]);
     const loadData = () => {
         try {
-            findAllExamCategorys(buidQuery({
+            findAllArticleCategorys(buidQuery({
                 searchField: ["name"],
                 search: search,
                 queryField: {
@@ -88,9 +88,18 @@ const ExamCategoryManagementPage = () => {
     }
     return (
 
-        <Card title={`Exam Category Management `}>
+        <Card title={`Article Category Management `}>
 
             <Space>
+                <Select
+                    defaultValue={1}
+                    style={{ width: 120 }}
+                    onChange={handleTypeChange}
+                >
+                    <Option value={null}>All</Option>
+                    <Option value={2}>Article</Option>
+                    <Option value={1}>Lession</Option>
+                </Select>
                 <Input.Search
                     placeholder="Search by name"
                     onChange={(e) => {
@@ -113,7 +122,7 @@ const ExamCategoryManagementPage = () => {
                 handleChangeRowPerPage={setRowsPerPage}
 
             />
-            <ExamCategoryModal
+            <ArticleCategoryModal
                 visible={isModalVisible}
                 isInsert={isInsert}
                 data={currentData}
@@ -126,4 +135,4 @@ const ExamCategoryManagementPage = () => {
     );
 }
 
-export default ExamCategoryManagementPage;
+export default ArticleCategoryManagementPage;

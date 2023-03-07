@@ -148,7 +148,7 @@ const ExamModal = (props) => {
                         <CustomUpload/>
                     </Form.Item>
 
-                    <Form.Item name="isActive" label="Activádasde" valuePropName="checked">
+                    <Form.Item name="isActive" label="Active" valuePropName="checked">
                         <Switch />
                     </Form.Item>
                 </Form>

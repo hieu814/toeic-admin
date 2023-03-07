@@ -20,6 +20,11 @@ export default function MyTable(props) {
     } = props;
     const columns = [
         {
+            name: 'ID',
+            selector: (row, i) => row.id,
+            sortable: true,
+        },
+        {
             name: 'Username',
             selector: 'username',
             sortable: true,

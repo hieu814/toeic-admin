@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Modal, Form, Input, Button, message, Spin, Switch, Select } from 'antd';
 import PropTypes from 'prop-types';
 
-import { useAddExamCategoryMutation, useUpdateExamCategoryMutation } from 'src/api/exam_category';
+import { useAddArticleCategoryMutation, useUpdateArticleCategoryMutation } from 'src/api/article_category';
 import { removeUndefined } from 'src/common/Funtion';
 import CustomUpload from 'src/components/CustomUpload';
 const { Option } = Select;
@@ -29,8 +29,8 @@ const CategoryModal = (props) => {
     const { isInsert, visible, onCancel, data, onComplete } = props
     const [form] = Form.useForm();
     const [errorMsg, setErrorMsg] = useState("");
-    const [addCategory, { error: insertError, isLoading: insertLoading = false }] = useAddExamCategoryMutation();
-    const [updateCategory, { error: updateError, isLoading: updateLoading = false }] = useUpdateExamCategoryMutation();
+    const [addCategory, { error: insertError, isLoading: insertLoading = false }] = useAddArticleCategoryMutation();
+    const [updateCategory, { error: updateError, isLoading: updateLoading = false }] = useUpdateArticleCategoryMutation();
     const onFinish = async (values) => {
         values = removeUndefined(values)
 
@@ -61,18 +61,18 @@ const CategoryModal = (props) => {
         if (respond.error) {
             setErrorMsg(respond?.error?.data?.message)
         } else {
+            console.log(respond);
             setErrorMsg("")
             onComplete()
         }
     }
     function handleCalcel() {
-        setErrorMsg("-")
         form.resetFields();
         onCancel()
     }
     useEffect(() => {
         form.setFieldsValue(data || {});
-    }, [form, data, errorMsg]);
+    }, [form, data]);
 
 
     return (
@@ -91,7 +91,7 @@ const CategoryModal = (props) => {
             ]}
         >
             <Spin spinning={insertLoading || updateLoading}>
-                {(errorMsg) && <div style={{ color: 'red', marginBottom: 10 }}>{`${errorMsg}`}</div>}
+                {(errorMsg != "") && <div style={{ color: 'red', marginBottom: 10 }}>{`${errorMsg}`}</div>}
                 <Form id='form-id'
                     {...formItemLayout}
                     form={form}
