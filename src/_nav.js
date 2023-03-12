@@ -36,6 +36,7 @@ const _nav = [
     to: '/user',
     icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
   },
+  
   {
     component: CNavGroup,
     name: 'Exam',
@@ -51,6 +52,11 @@ const _nav = [
         component: CNavItem,
         name: 'Category',
         to: '/exam/category',
+      },
+      {
+        component: CNavItem,
+        name: 'Question',
+        to: '/exam/quesions',
       },
 
     ],

@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setCurrentUser, setIsLogin } from 'src/stores/global';
 import { useState } from 'react';
 import { useLoginMutation } from 'src/api/auth';
+import { getErrorMessage } from 'src/common/Funtion'
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -35,15 +36,13 @@ const Login = () => {
     login({ username, password })
       .unwrap()
       .then((respond) => {
-
         dispatch(setCurrentUser(respond.data))
-        console.log(user);
         dispatch(setIsLogin(true))
         navigate('/dashboard');
 
       })
       .catch((err) => {
-        setError(err.data.message)
+        setError(getErrorMessage(err))
         dispatch(setCurrentUser(null))
         dispatch(setIsLogin(false))
       });

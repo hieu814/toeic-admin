@@ -17,43 +17,43 @@ export default function QuestionTable(props) {
         {
             title: 'Num',
             dataIndex: 'number',
-            key: 'number',
+            // key: 'number',
         },
         {
             title: 'Question',
             dataIndex: 'question',
-            key: 'question',
+            // key: 'question',
         },
         {
             title: 'A',
             dataIndex: 'A',
-            key: 'A',
+            // key: 'A',
         },
         {
             title: 'B',
             dataIndex: 'B',
-            key: 'B',
+            // key: 'B',
         },
         {
             title: 'C',
             dataIndex: 'C',
-            key: 'C',
+            // key: 'C',
         },
         {
             title: 'D',
             dataIndex: 'D',
-            key: 'D',
+            // key: 'D',
         },
         {
             title: 'Answer',
             dataIndex: 'correct_answer',
-            key: 'correct_answer',
+            // key: 'correct_answer',
         },
         {
             title: 'Action',
             dataIndex: 'operation',
-            key: 'operation',
-            render: (record) => (
+            // key: 'operation',
+            render: (_,record) => (
                 <Space size="middle">
                     <>
                         <Popconfirm
@@ -64,14 +64,17 @@ export default function QuestionTable(props) {
                         >
                             <DeleteOutlined style={{ color: "#FF0000" }} />
                         </Popconfirm>
-                        <EditOutlined onClick={() => handleUpdate(record)} />
+                        <EditOutlined onClick={() => {
+                            console.log(record);
+                            handleUpdate(record)
+                        }} />
                     </>
                 </Space>
             ),
         },
     ];
     return <div>
-        <Table columns={columns} dataSource={data} pagination={false} />
+        <Table columns={columns} dataSource={data} pagination={false} rowKey="number"/>
         <Button type="dashed" style={{ marginTop: 6 }} onClick={handleInsert} block icon={<PlusOutlined />}>
             Add Question
         </Button>

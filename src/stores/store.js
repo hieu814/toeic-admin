@@ -15,6 +15,7 @@ import { usersApi } from 'src/api/user';
 import { examCategoryApi } from 'src/api/exam_category';
 import { examApi } from 'src/api/exam';
 import { articleCategoryApi } from 'src/api/article_category';
+import { questionApi } from 'src/api/question';
 
 const persistConfig = {
   key: 'root',
@@ -27,6 +28,7 @@ const rootReducer = {
   [examCategoryApi.reducerPath]: examCategoryApi.reducer,
   [examApi.reducerPath]: examApi.reducer,
   [articleCategoryApi.reducerPath]: articleCategoryApi.reducer,
+  [questionApi.reducerPath]: questionApi.reducer,
   global: persistReducer(persistConfig, global),
 }
 
@@ -39,7 +41,9 @@ const store = configureStore({
           ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
         },
       }
-    ).concat(authApi.middleware, usersApi.middleware, examCategoryApi.middleware, examApi.middleware, articleCategoryApi.middleware),
+    ).concat(authApi.middleware, usersApi.middleware,
+      examCategoryApi.middleware, examApi.middleware,
+      articleCategoryApi.middleware, questionApi.middleware),
 })
 
 const persistor = persistStore(store)

@@ -34,7 +34,7 @@ export default function PassageTable(props) {
             title: 'Action',
             dataIndex: 'operation',
             key: 'operation',
-            render: (record) => (
+            render: (_,record) => (
                 <Space size="middle">
                     <>
                         <Popconfirm
@@ -52,7 +52,7 @@ export default function PassageTable(props) {
         },
     ];
     return <div>
-        <Table columns={columns} dataSource={data} pagination={false} />
+        <Table columns={columns} dataSource={data} pagination={false} rowKey="number"/>
         <Button type="dashed" style={{ marginTop: 6 }} onClick={handleInsert} block icon={<PlusOutlined />}>
             Add Question
         </Button>

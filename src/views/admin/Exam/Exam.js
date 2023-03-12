@@ -88,7 +88,7 @@ const ExamManagementPage = () => {
         <Card title={`Exam Management`}>
             <Space>
                 <Select
-                    defaultValue={1}
+                    defaultValue={""}
                     style={{ width: 120 }}
                     onChange={handleTypeChange}
                 >
@@ -107,7 +107,7 @@ const ExamManagementPage = () => {
                     style={{ width: 300 }}
                 />
                 <Button type="primary" onClick={handleInsert}>
-                    Add Category
+                    Add
                 </Button>
             </Space>
             <MyTable

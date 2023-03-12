@@ -20,30 +20,53 @@ export default function MyTable(props) {
     } = props;
     const columns = [
         {
-            name: 'ID',
-            selector: (row, i) => row.id,
+            name: 'group',
+            selector: row => `${ row.group } `,
             sortable: true,
+            maxWidth: "150px",
+            wrap: true,
         },
         {
-            name: 'Username',
-            selector: 'username',
-            sortable: true,
+            name: 'Image',
+            wrap: true,
+
+            cell: (row) => (
+                <img src={`${process.env.REACT_APP_BACKEND_URL}${row?.image}`}
+                    onError={(e) => {
+                        e.target.src = "https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg";
+                    }}
+                    style={{
+                        width: 80,
+                        height: 80,
+                        margin: '10px',
+                        borderRadius: '10%'
+                    }}
+                />
+            ),
         },
+
         {
-            name: 'Email',
-            selector: 'email',
-            sortable: true,
-        },
-        {
-            title: "Role",
-            dataIndex: "userType",
+            name: "Type",
+            dataIndex: "type",
+            wrap: true,
+            maxWidth: "150px",
             key: "userType",
-            render: (role) => (
-                <Tag color={role === 1 ? "red" : "blue"}>{role}</Tag>
+            cell: (record) => (
+                <Tag color={"blue"}>{`Part ${record?.type ?? 1}`}</Tag>
+            ),
+        },
+        {
+            name: 'Audio',
+            wrap: true,
+            cell: (row) => (
+                <div width="1150" height="50">
+                    <audio src="http://commondatastorage.googleapis.com/codeskulptor-demos/DDR_assets/Kangaroo_MusiQue_-_The_Neverwritten_Role_Playing_Game.mp3" controls />
+                </div>
             ),
         },
         {
             name: 'Actions',
+            wrap: true,
             cell: (record) => (
 
                 <Space>
@@ -70,7 +93,6 @@ export default function MyTable(props) {
             <DataTable
                 columns={columns}
                 data={data}
-
                 onChangePage={(p) => handleChangePage(p)}
                 pagination={true}
                 paginationTotalRows={totalPage}

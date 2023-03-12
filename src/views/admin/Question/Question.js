@@ -1,76 +1,166 @@
+import React, { useEffect, useState } from "react";
+import { Space, Select, Input, Button, Card, message, AutoComplete } from "antd";
+import { useFindAllExamMutation } from "src/api/exam";
+import { buidQuery, getPaginator } from "src/common/Funtion";
+import { useDeleteQuestionMutation, useFindAllQuestionsMutation } from "src/api/question";
+import GroupQuestionModal from "./components/GroupQuestionModal";
+import MyTable from "./components/GroupQuestionTable";
+import { useLocation } from "react-router-dom";
+const { Option } = Select;
 
-import { DeleteOutlined, DownOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Card, Divider, Dropdown, Popconfirm, Space, Table } from 'antd';
-import React, { useState } from 'react';
-import PassageModal from './components/PassageModal';
-import PassageTable from './components/PassageTable';
-import QuestionTable from './components/QuestionTable';
 
-const App = () => {
-  const [questionModalVisible, setQuestionModalVisible] = useState(false)
-  const [passageModalVisible, setPassageModalVisible] = useState(false)
-  var group_question_data = JSON.parse(`{
-    "group":"92-94",
-    "questions":[
-       {
-          "number":92,
-          "question":"What are the listeners training to do?",
-          "A":"Write promotional materials",
-          "B":"Teach history classes",
-          "C":"Give museum tours",
-          "D":"Manage unpaid volunteers"
-       },
-       {
-          "number":93,
-          "question":"According to the speaker, what should the listeners pay attention to?",
-          "A":"The layout of a space",
-          "B":"Some visitors’ requests",
-          "C":"Some safety guidelines",
-          "D":"Her communication style"
-       },
-       {
-          "number":94,
-          "question":"What does the speaker ask the listeners to do?",
-          "A":"Return a badge after the session",
-          "B":"Take notes during a talk",
-          "C":"Raise their hands to ask questions",
-          "D":"Sign an attendance sheet"
-       }
-    ],
-    "passages":[
-       {
-        "number":1,
-          "content":"There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.",
-          "image":"https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png"
-       }
-    ]
- }`)
+///exam/quesions?examID=id
+const ExamManagementPage = () => {
+  const query = new URLSearchParams(useLocation().search);
+  const examIdQuery = query.get("examID");
+  const [page, setPage] = useState(1)
+  const [rowsPerPage, setRowsPerPage] = useState(10)
+  const [findAllQuestions, { data, isLoading, error }] = useFindAllQuestionsMutation();
+  const [deleteExam] = useDeleteQuestionMutation();
+  const [findAllExams, { data: examData, isExamLoading, isError }] = useFindAllExamMutation();
+  const [currentData, setCurrentData] = useState(null)
+  const [isModalVisible, setIsModalVisible] = useState(false)
+  const [isInsert, setIsInsert] = useState(false)
+  const [search, setSearch] = useState("");
+  const [examID, setExamID] = useState("");
+
+  useEffect(() => {
+    loadData()
+
+  }, [findAllQuestions, search, examID, rowsPerPage]);
+
+  const loadData = () => {
+    try {
+      findAllQuestions(buidQuery({
+        page: page,
+        rowsPerPage: rowsPerPage,
+        queryField: {
+          exam: examID
+        },
+      }))
+
+    } catch (error) {
+      console.log(error.data);
+    }
+
+  }
+
+  function handleDelete(params) {
+    deleteExam(params.id)
+      .unwrap()
+      .then((respond) => {
+        message.success(respond.message)
+        loadData()
+      })
+      .catch((err) => {
+        console.log(err);
+
+      });
+  }
+  function handleInsert(params) {
+    setIsInsert(true)
+    setCurrentData({})
+    setIsModalVisible(true)
+  }
+  function handleUpdate(params) {
+
+    setIsInsert(false)
+    setCurrentData(params)
+    setIsModalVisible(true)
+
+  }
+  function handleCalcel(params) {
+    loadData()
+    setCurrentData({})
+    setIsModalVisible(false)
+
+  }
+  const handleSearch = (value) => {
+    if (value) {
+      findAllExams(buidQuery({
+        searchField: ["name"],
+        search: value,
+        // queryField: {
+        //     type: type
+        // },
+        page: 0,
+        rowsPerPage: 10,
+      }));
+    }
+  };
+  const onSelect = (value) => {
+
+    const found = (examData?.data?.data || []).find(exam => exam.name === value);
+    console.log('onSelect', found);
+    setExamID(found.id)
+  };
+  const searchResult = (data) => {
+    console.log(JSON.stringify(data));
+    if (!Array.isArray(data) || data.length == 0) return []
+    var options = data.map((category) => {
+
+      return {
+        value: category?.name,
+        labelInValue: false,
+        label: (
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+            }}
+          >
+            <span>
+              {category?.name}
+            </span>
+          </div>
+        ),
+      };
+    });
+    console.log(options);
+    return options
+  }
+
 
   return (
-    <>
-      <Card>
-        <Divider>Question</Divider>
-        <QuestionTable
-          data={group_question_data.questions}
-          handleInsert={() => setQuestionModalVisible(true)}
-        />
-        <PassageTable
-          visible={questionModalVisible}
-          onCancel={() => { setQuestionModalVisible(false) }}
-        />
-      </Card>
-      <Card>
-        <Divider>Question</Divider>
-        <PassageTable
-          data={group_question_data.passages}
-          handleInsert={() => setQuestionModalVisible(true)}
-        />
-        <PassageModal
-          visible={questionModalVisible}
-          onCancel={() => { setQuestionModalVisible(false) }}
-        />
-      </Card>
-    </>
+
+    <Card title={`Question Management`}>
+      <Space>
+        {!examIdQuery && (<AutoComplete
+          dropdownMatchSelectWidth={252}
+          style={{
+            width: 300,
+          }}
+          options={searchResult(examData?.data?.data)}
+          onSelect={onSelect}
+
+        >
+          <Input.Search placeholder="input here" enterButton onSearch={handleSearch} />
+        </AutoComplete>)}
+        <Button type="primary" onClick={handleInsert}>
+          Add Question
+        </Button>
+      </Space>
+      <MyTable
+        isloading={false}
+        // data={data?.data?.data || []}
+        data={data}
+        totalPage={getPaginator(data).pageCount}
+        handleDelete={handleDelete}
+        handleUpdate={handleUpdate}
+        handleChangeRowPerPage={setRowsPerPage}
+        handleChangePage={setPage}
+
+      />
+      <GroupQuestionModal
+        visible={isModalVisible}
+        isInsert={isInsert}
+        data={currentData}
+        onCancel={handleCalcel}
+
+      />
+    </Card>
+
   );
-};
-export default App;
+}
+
+export default ExamManagementPage;

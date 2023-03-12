@@ -25,6 +25,7 @@ function buidQuery(options) {
         }
 
     }
+
     if (options.queryField) {
         var tmp = Object.fromEntries(Object.entries(options.queryField).filter(([_, v]) => v != null))
         Object.assign(query.query, tmp);
@@ -61,4 +62,9 @@ function getUrlfromUploadRespond(response) {
     const data = response?.data?.uploadSuccess;
     return data
 }
-export { buidQuery, getPaginator, removeUndefined ,getUrlfromUploadRespond}
+function getErrorMessage(err) {
+    if (err?.data?.message)
+        return err.data.message
+    return "Some thing wrong"
+}
+export { buidQuery, getPaginator, removeUndefined, getUrlfromUploadRespond, getErrorMessage }
