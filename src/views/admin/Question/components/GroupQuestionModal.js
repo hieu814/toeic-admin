@@ -7,6 +7,7 @@ import PassageModal from "./PassageModal";
 import PassageTable from "./PassageTable";
 import QuestionTable from "./QuestionTable";
 import QuestionModal from "./QuestionModal";
+import { useLocation } from "react-router-dom";
 const defaultQs = {
     number: 0,
     question: "",
@@ -21,7 +22,9 @@ const defaultPs = {
     image: "",
 }
 const GroupQuestionModal = (props) => {
-    const { isInsert, visible, onCancel, data } = props
+    const { data } = props
+    const query = new URLSearchParams(useLocation().search);
+    const questionIdQuery = query.get("questionID");
     const [questionModalVisible, setQuestionModalVisible] = useState(false)
     const [passageModalVisible, setPassageModalVisible] = useState(false)
     const [currentQuestion, setCurrentQuestion] = useState(defaultQs)
@@ -61,13 +64,9 @@ const GroupQuestionModal = (props) => {
         setCurrentGroupQuestion(data)
     }, [data, currentGroupQuestion]);
     return (
-        <Modal
-            forceRender
-            bodyStyle={{ overflowX: 'scroll' }}
-            width="60%"
+        <Card
             title={`Group ${data?.group}`}
-            centered
-            open={visible} okText="Create" onCancel={onCancel} >
+            >
             <Divider>Question</Divider>
             <Card title="Question">
                 <QuestionTable
@@ -111,7 +110,7 @@ const GroupQuestionModal = (props) => {
                     onCancel={() => { setPassageModalVisible(false) }}
                 />
             </Card>
-        </Modal>
+        </Card>
     );
 };
 GroupQuestionModal.propTypes = {

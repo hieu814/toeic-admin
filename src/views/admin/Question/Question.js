@@ -5,7 +5,7 @@ import { buidQuery, getPaginator } from "src/common/Funtion";
 import { useDeleteQuestionMutation, useFindAllQuestionsMutation } from "src/api/question";
 import GroupQuestionModal from "./components/GroupQuestionModal";
 import MyTable from "./components/GroupQuestionTable";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 const { Option } = Select;
 
 
@@ -13,14 +13,12 @@ const { Option } = Select;
 const ExamManagementPage = () => {
   const query = new URLSearchParams(useLocation().search);
   const examIdQuery = query.get("examID");
+  const navigate = useNavigate();
   const [page, setPage] = useState(1)
   const [rowsPerPage, setRowsPerPage] = useState(10)
   const [findAllQuestions, { data, isLoading, error }] = useFindAllQuestionsMutation();
   const [deleteExam] = useDeleteQuestionMutation();
   const [findAllExams, { data: examData, isExamLoading, isError }] = useFindAllExamMutation();
-  const [currentData, setCurrentData] = useState(null)
-  const [isModalVisible, setIsModalVisible] = useState(false)
-  const [isInsert, setIsInsert] = useState(false)
   const [search, setSearch] = useState("");
   const [examID, setExamID] = useState("");
 
@@ -58,22 +56,10 @@ const ExamManagementPage = () => {
       });
   }
   function handleInsert(params) {
-    setIsInsert(true)
-    setCurrentData({})
-    setIsModalVisible(true)
+    navigate("/exam/quesion")
   }
-  function handleUpdate(params) {
-
-    setIsInsert(false)
-    setCurrentData(params)
-    setIsModalVisible(true)
-
-  }
-  function handleCalcel(params) {
-    loadData()
-    setCurrentData({})
-    setIsModalVisible(false)
-
+  function handleUpdate(qs) {
+    navigate(`/exam/quesion?questionID=${qs?.id || null}`)
   }
   const handleSearch = (value) => {
     if (value) {
@@ -149,13 +135,6 @@ const ExamManagementPage = () => {
         handleUpdate={handleUpdate}
         handleChangeRowPerPage={setRowsPerPage}
         handleChangePage={setPage}
-
-      />
-      <GroupQuestionModal
-        visible={isModalVisible}
-        isInsert={isInsert}
-        data={currentData}
-        onCancel={handleCalcel}
 
       />
     </Card>

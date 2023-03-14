@@ -67,4 +67,17 @@ function getErrorMessage(err) {
         return err.data.message
     return "Some thing wrong"
 }
-export { buidQuery, getPaginator, removeUndefined, getUrlfromUploadRespond, getErrorMessage }
+function isImageUrl(url) {
+    return /\.(jpeg|jpg|gif|png)$/.test(url);
+}
+
+function isAudioUrl(url) {
+    return /\.(mp3|wav)$/.test(url);
+}
+export {
+    buidQuery, getPaginator,
+    removeUndefined, getUrlfromUploadRespond,
+    getErrorMessage,
+    isImageUrl,
+    isAudioUrl
+}
