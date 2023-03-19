@@ -21,15 +21,15 @@ export default function MyTable(props) {
     const columns = [
         {
             name: 'group',
-            selector: row => `${ row.group } `,
+            selector: row => `${row.group} `,
             sortable: true,
-            maxWidth: "150px",
+            //maxWidth: "150px",
             wrap: true,
         },
         {
             name: 'Image',
             wrap: true,
-
+            //maxWidth: "150px",
             cell: (row) => (
                 <img src={`${process.env.REACT_APP_BACKEND_URL}${row?.image}`}
                     onError={(e) => {
@@ -49,20 +49,18 @@ export default function MyTable(props) {
             name: "Type",
             dataIndex: "type",
             wrap: true,
-            maxWidth: "150px",
+            //maxWidth: "150px",
             key: "userType",
             cell: (record) => (
                 <Tag color={"blue"}>{`Part ${record?.type ?? 1}`}</Tag>
             ),
         },
         {
-            name: 'Audio',
+            name: 'Exam',
+            selector: row => `${row?.exam ? (row?.exam?.name || "") : ""} `,
+            sortable: true,
+            //maxWidth: "150px",
             wrap: true,
-            cell: (row) => (
-                <div width="1150" height="50">
-                    <audio src="http://commondatastorage.googleapis.com/codeskulptor-demos/DDR_assets/Kangaroo_MusiQue_-_The_Neverwritten_Role_Playing_Game.mp3" controls />
-                </div>
-            ),
         },
         {
             name: 'Actions',
@@ -73,11 +71,11 @@ export default function MyTable(props) {
                     <>
                         <Popconfirm
                             title="Are you sure you want to delete this record?"
-                            onConfirm={() => handleUpdate(record)}
+                            onConfirm={() => handleDelete(record)}
                             okText="Yes"
                             cancelText="No"
                         >
-                            <DeleteOutlined style={{ color: "#FF0000" }} onClick={() => handleDelete(record)} />
+                            <DeleteOutlined style={{ color: "#FF0000" }} />
                         </Popconfirm>
 
                         <EditOutlined onClick={() => handleUpdate(record)} />

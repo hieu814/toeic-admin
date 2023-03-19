@@ -11,6 +11,7 @@ export default function QuestionTable(props) {
     const { handleDelete,
         handleUpdate,
         handleInsert,
+        type,
         data,
     } = props;
     const columns = [
@@ -53,7 +54,7 @@ export default function QuestionTable(props) {
             title: 'Action',
             dataIndex: 'operation',
             // key: 'operation',
-            render: (_,record) => (
+            render: (_, record) => (
                 <Space size="middle">
                     <>
                         <Popconfirm
@@ -73,11 +74,20 @@ export default function QuestionTable(props) {
             ),
         },
     ];
+    function maxQuestion(_type) {
+        console.log("maxQuestion ", _type, "  data?.length ",data?.length);
+        if ([1, 2, 5].includes(_type)) {
+            return 1
+        } else if ([3, 4].includes(_type)) {
+            return 3
+        } else return 696
+    }
     return <div>
-        <Table columns={columns} dataSource={data} pagination={false} rowKey="number"/>
-        <Button type="dashed" style={{ marginTop: 6 }} onClick={handleInsert} block icon={<PlusOutlined />}>
+        <Table columns={columns} dataSource={data} pagination={false} rowKey="number" />
+        {data?.length < maxQuestion(type) && (<Button type="dashed" style={{ marginTop: 6 }} onClick={handleInsert} block icon={<PlusOutlined />}>
             Add Question
-        </Button>
+        </Button>)}
+
     </div>;
 
 }
@@ -86,5 +96,6 @@ QuestionTable.propTypes = {
     handleDelete: PropTypes.func,
     handleUpdate: PropTypes.func,
     handleInsert: PropTypes.func,
+    type: PropTypes.number,
     data: PropTypes.any,
 };

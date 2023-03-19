@@ -24,7 +24,7 @@ const ExamManagementPage = () => {
 
   useEffect(() => {
     loadData()
-
+    setExamID(examIdQuery)
   }, [findAllQuestions, search, examID, rowsPerPage]);
 
   const loadData = () => {
@@ -32,18 +32,20 @@ const ExamManagementPage = () => {
       findAllQuestions(buidQuery({
         page: page,
         rowsPerPage: rowsPerPage,
+        populate: 'exam',
         queryField: {
           exam: examID
         },
       }))
 
     } catch (error) {
-      console.log(error.data);
+      console.log(error);
     }
 
   }
 
   function handleDelete(params) {
+    console.log(params);
     deleteExam(params.id)
       .unwrap()
       .then((respond) => {
@@ -56,10 +58,11 @@ const ExamManagementPage = () => {
       });
   }
   function handleInsert(params) {
-    navigate("/exam/quesion")
+    navigate(`/exam/quesion${examIdQuery ? `?examID=${examIdQuery}` : ""}`)
   }
   function handleUpdate(qs) {
-    navigate(`/exam/quesion?questionID=${qs?.id || null}`)
+    console.log(qs);
+    navigate(`/exam/quesion?${qs?.id ? `questionID=${qs?.id}` : ""}${examIdQuery ? `&examID=${examIdQuery}` : ""}`)
   }
   const handleSearch = (value) => {
     if (value) {
@@ -75,7 +78,6 @@ const ExamManagementPage = () => {
     }
   };
   const onSelect = (value) => {
-
     const found = (examData?.data?.data || []).find(exam => exam.name === value);
     console.log('onSelect', found);
     setExamID(found.id)
@@ -122,14 +124,14 @@ const ExamManagementPage = () => {
         >
           <Input.Search placeholder="input here" enterButton onSearch={handleSearch} />
         </AutoComplete>)}
-        <Button type="primary" onClick={handleInsert}>
+        {examIdQuery && (<Button type="primary" onClick={handleInsert}>
           Add Question
-        </Button>
+        </Button>)}
       </Space>
       <MyTable
         isloading={false}
         // data={data?.data?.data || []}
-        data={data}
+        data={data?.data?.data || []}
         totalPage={getPaginator(data).pageCount}
         handleDelete={handleDelete}
         handleUpdate={handleUpdate}

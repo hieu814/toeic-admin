@@ -23,7 +23,7 @@ const PassageModal = ({ data, visible, onComplete, onCancel }) => {
     return (
         <Modal
             forceRender
-            width="60%"
+            // width="60%"
             centered
             open={visible} title="Create a new passage" okText="Create" onCancel={onCancel} onOk={form.submit}>
             <Form form={form} layout="vertical" onFinish={onFinish}>

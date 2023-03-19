@@ -5,7 +5,7 @@ const uploadFileApi = (formData) => {
         method: 'POST',
         body: formData,
 
-    })
+    }).then((response) => response.json()).then((response) => response)
 };
 export {
     uploadFileApi

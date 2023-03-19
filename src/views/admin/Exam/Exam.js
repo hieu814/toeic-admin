@@ -5,11 +5,13 @@ import MyTable from "./components/ExamTable";
 import { buidQuery, getPaginator } from "src/common/Funtion";
 import ExamModal from "./components/ExamModal";
 import { useFindAllExamCategoriesMutation } from "src/api/exam_category";
+import { useNavigate } from "react-router-dom";
 const { Option } = Select;
 
 
 
 const ExamManagementPage = () => {
+    const navigate = useNavigate();
     const [page, setPage] = useState(1)
     const [rowsPerPage, setRowsPerPage] = useState(10)
     const [findAllExams, { data, isLoading, isError }] = useFindAllExamMutation();
@@ -53,6 +55,7 @@ const ExamManagementPage = () => {
         setSearch(e);
     };
     function handleDelete(params) {
+        console.log("delete ", params);
         deleteExam(params.id)
             .unwrap()
             .then((respond) => {
@@ -66,7 +69,7 @@ const ExamManagementPage = () => {
     }
     function handleInsert(params) {
         setIsInsert(true)
-        setCurrentData({image: "asdadsa"})
+        setCurrentData({ image: "asdadsa" })
         setIsModalVisible(true)
     }
     function handleUpdate(params) {
@@ -81,7 +84,16 @@ const ExamManagementPage = () => {
         loadData()
         setCurrentData({})
         setIsModalVisible(false)
-
+    }
+    function handleAction(action, value) {
+        console.log({ action, value });
+        if (action == 1) {
+            handleUpdate(value)
+        } else if (action == 2) {
+            handleDelete(value)
+        } else if (action == 3) {
+            navigate(`/exam/quesions?examID=${value?.id || null}`)
+        }
     }
     return (
 
@@ -114,10 +126,9 @@ const ExamManagementPage = () => {
                 isloading={isLoading}
                 data={data?.data?.data || []}
                 totalPage={getPaginator(data).pageCount}
-                handleDelete={handleDelete}
-                handleUpdate={handleUpdate}
+                handleAction={handleAction}
                 handleChangeRowPerPage={setRowsPerPage}
-                handleChangePage = {setPage}
+                handleChangePage={setPage}
 
             />
             <ExamModal

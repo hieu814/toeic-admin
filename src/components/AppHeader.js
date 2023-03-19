@@ -23,7 +23,7 @@ const AppHeader = () => {
   const { sidebarShow } = useSelector((state) => state.global)
 
   return (
-    <CHeader position="sticky" >
+    <CHeader >
       <CContainer fluid>
         <CHeaderToggler className="ps-1" onClick={() => dispatch(setSidebarShow(!sidebarShow))}>
           <CIcon icon={cilMenu} size="lg" />

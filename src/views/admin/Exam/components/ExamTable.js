@@ -4,14 +4,12 @@ import { Space, Tag, Popconfirm } from 'antd';
 import React from 'react'
 import DataTable from 'react-data-table-component';
 import PropTypes from "prop-types";
-import {
-    DeleteOutlined, EditOutlined,
+import ExamAction from './ExamAction';
 
-} from '@ant-design/icons';
+
+
 export default function MyTable(props) {
-    const { handleDelete,
-        handleUpdate,
-        handlePreview,
+    const { handleAction,
         handleChangePage,
         handleChangeRowPerPage,
         totalPage,
@@ -56,21 +54,12 @@ export default function MyTable(props) {
         {
             name: 'Actions',
             cell: (record) => (
+                <ExamAction
+                    onSelect={(key) => {
+                        handleAction(key, record)
+                    }}
+                />
 
-                <Space>
-                    <>
-                        <Popconfirm
-                            title="Are you sure you want to delete this record?"
-                            onConfirm={() => handleDelete(record)}
-                            okText="Yes"
-                            cancelText="No"
-                        >
-                            <DeleteOutlined style={{ color: "#FF0000" }} />
-                        </Popconfirm>
-
-                        <EditOutlined onClick={() => handleUpdate(record)} />
-                    </>
-                </Space>
 
             ),
             button: true,
@@ -96,9 +85,7 @@ export default function MyTable(props) {
 }
 
 MyTable.propTypes = {
-    handleDelete: PropTypes.func,
-    handleUpdate: PropTypes.func,
-    handlePreview: PropTypes.func,
+    handleAction: PropTypes.func,
     handleChangePage: PropTypes.func,
     handleChangeRowPerPage: PropTypes.func,
     totalPage: PropTypes.number,

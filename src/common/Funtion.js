@@ -1,6 +1,8 @@
 const { array } = require("prop-types");
 
 function buidQuery(options) {
+    options = removeUndefined(options)
+    console.log(options);
     var query = {
         query: {},
         options: {
@@ -10,6 +12,7 @@ function buidQuery(options) {
             page: options?.page || 1,
             limit: options?.rowsPerPage || 10,
             pagination: true,
+            // populate: 'exam',
             useEstimatedCount: false,
             useCustomCountFn: false,
             forceCountFn: false,
@@ -25,9 +28,11 @@ function buidQuery(options) {
         }
 
     }
-
+    if (options.populate) {
+        query.options.populate = options.populate
+    }
     if (options.queryField) {
-        var tmp = Object.fromEntries(Object.entries(options.queryField).filter(([_, v]) => v != null))
+        var tmp = Object.fromEntries(Object.entries(options.queryField).filter(([_, v]) => v))
         Object.assign(query.query, tmp);
     }
     console.log(query);
@@ -55,12 +60,12 @@ function getPaginator(res) {
 }
 function removeUndefined(params) {
     return Object.fromEntries(
-        Object.entries(params).filter(([key, value]) => value !== undefined)
+        Object.entries(params).filter(([key, value]) => value != null)
     );
 }
 function getUrlfromUploadRespond(response) {
     const data = response?.data?.uploadSuccess;
-    return data
+    return data || []
 }
 function getErrorMessage(err) {
     if (err?.data?.message)

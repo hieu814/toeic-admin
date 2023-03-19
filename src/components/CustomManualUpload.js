@@ -1,8 +1,7 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { Modal, Upload } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { getUrlfromUploadRespond } from 'src/common/Funtion';
 const getBase64 = (file) =>
     new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -10,18 +9,22 @@ const getBase64 = (file) =>
         reader.onload = () => resolve(reader.result);
         reader.onerror = (error) => reject(error);
     });
-const CustomManualUpload = ({ url, maxCount = 1, onChange }) => {
+const CustomManualUpload = ({ url = '', maxCount = 1, onChange, value }) => {
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
-    const [fileList, setFileList] = useState(url ? [
-        {
-            uid: '-1',
-            name: 'image.png',
-            status: 'done',
-            url: url,
-        }
-    ] : []);
+    const [fileList, setFileList] = useState([]);
+    useEffect(() => {
+        console.log("url chage ", url);
+        setFileList(url ? [
+            {
+                uid: '-1',
+                name: 'file',
+                status: 'done',
+                url: `${process.env.REACT_APP_BACKEND_URL}${url}`,
+            }
+        ] : [])
+    }, [url]);
     const handleCancel = () => setPreviewOpen(false);
     const handlePreview = async (file) => {
         if (!file.url && !file.preview) {
@@ -31,14 +34,21 @@ const CustomManualUpload = ({ url, maxCount = 1, onChange }) => {
         setPreviewOpen(true);
         setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
     };
-    const handleChange = ({ fileList: newFileList }) => {
-        setFileList(newFileList)
-        const fileUrls = [];
-        newFileList.forEach(o => {
-            o?.response && fileUrls.push((getUrlfromUploadRespond(o.response) || [""])[0]?.path);
+    const handleChange = (_fileList) => {
+        setFileList(_fileList)
+        const formData = new FormData();
+        fileList.forEach((file) => {
+            formData.append('files', file);
         });
-        onChange(fileUrls)
+        onChange(formData)
+
     };
+    const handleRemoveFile = (file) => {
+        const index = fileList.indexOf(file);
+        const newFileList = fileList.slice();
+        newFileList.splice(index, 1);
+        // handleChange(newFileList);
+    }
     const uploadButton = (
         <div>
             <PlusOutlined />
@@ -54,16 +64,18 @@ const CustomManualUpload = ({ url, maxCount = 1, onChange }) => {
     return (
         <>
             <Upload
-                action={`${process.env.REACT_APP_BACKEND_URL}/admin/upload`}
+                // action={`${process.env.REACT_APP_BACKEND_URL}/admin/upload`}
                 listType="picture-card"
                 fileList={fileList}
                 onPreview={handlePreview}
-                showUploadList={{
-                    showPreviewIcon: true,
-                    showRemoveIcon: true,
-                    showDownloadIcon: false,
+                onRemove={handleRemoveFile}
+                beforeUpload={(file) => {
+                    setFileList([...fileList, file]);
+                    return false;
                 }}
-                onChange={handleChange}
+                onChange={({ fileList: newFileList }) => {
+                    handleChange(newFileList)
+                }}
                 maxCount={maxCount}
             >
                 {fileList.length >= maxCount ? null : uploadButton}
@@ -83,6 +95,7 @@ const CustomManualUpload = ({ url, maxCount = 1, onChange }) => {
 CustomManualUpload.propTypes = {
     onChange: PropTypes.func,
     url: PropTypes.string,
-    maxCount: PropTypes.number
+    maxCount: PropTypes.number,
+    value: PropTypes.any
 }
 export default CustomManualUpload;
