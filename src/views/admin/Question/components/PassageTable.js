@@ -7,6 +7,7 @@ import {
     DeleteOutlined, EditOutlined, PlusOutlined,
 
 } from '@ant-design/icons';
+import MyImage from 'src/components/MyImage';
 export default function PassageTable(props) {
     const { handleDelete,
         handleUpdate,
@@ -23,7 +24,17 @@ export default function PassageTable(props) {
             title: 'Image',
             dataIndex: 'image',
             key: 'image',
-            render: (imageSrc) => <img src={imageSrc} alt="Question" style={{ width: 50, height: 50 }} />,
+            render: (imageSrc) => {
+                return <>
+                    <MyImage
+                        width={80}
+                        height={80}
+                        src={`${process.env.REACT_APP_BACKEND_URL}${imageSrc}`}
+                    />
+
+                </>
+
+            },
         },
         {
             title: 'Content',
@@ -34,7 +45,7 @@ export default function PassageTable(props) {
             title: 'Action',
             dataIndex: 'operation',
             key: 'operation',
-            render: (_,record) => (
+            render: (_, record) => (
                 <Space size="middle">
                     <>
                         <Popconfirm
@@ -52,7 +63,7 @@ export default function PassageTable(props) {
         },
     ];
     return <div>
-        <Table columns={columns} dataSource={data} pagination={false} rowKey="number"/>
+        <Table columns={columns} dataSource={data} pagination={false} rowKey="number" />
         <Button type="dashed" style={{ marginTop: 6 }} onClick={handleInsert} block icon={<PlusOutlined />}>
             Add Question
         </Button>

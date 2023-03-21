@@ -2,7 +2,6 @@ const { array } = require("prop-types");
 
 function buidQuery(options) {
     options = removeUndefined(options)
-    console.log(options);
     var query = {
         query: {},
         options: {
@@ -28,6 +27,9 @@ function buidQuery(options) {
         }
 
     }
+    // if (options.ids && Array.isArray(options.ids)) {
+    //     query.query = { ...query, _id: { $in: options.ids } }
+    // }
     if (options.populate) {
         query.options.populate = options.populate
     }

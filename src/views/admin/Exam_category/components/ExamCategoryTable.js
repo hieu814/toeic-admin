@@ -8,6 +8,7 @@ import {
     DeleteOutlined, EditOutlined,
 
 } from '@ant-design/icons';
+import MyImage from 'src/components/MyImage';
 export default function MyTable(props) {
     const { handleDelete,
         handleUpdate,
@@ -33,17 +34,11 @@ export default function MyTable(props) {
         {
             name: 'Image',
             cell: (row) => (
-                <img src={`${process.env.REACT_APP_BACKEND_URL}${row?.image}`}
-                    onError={(e) => {
-                        e.target.src = "https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg";
-                    }}
-                    style={{
-                        width: 80,
-                        height: 80,
-                        margin: '10px',
-                        borderRadius: '10%'
-                    }}
-                />
+                <MyImage
+                width={80}
+                height={80}
+                src={`${process.env.REACT_APP_BACKEND_URL}${row?.image}`}
+            />
             ),
         },
         {

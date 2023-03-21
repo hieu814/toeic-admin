@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Space, Select, Input, Button, Card, message, AutoComplete } from "antd";
-import { useFindAllExamMutation } from "src/api/exam";
+import { useFindAllExamMutation, useGetExamQuery } from "src/api/exam";
 import { buidQuery, getPaginator } from "src/common/Funtion";
 import { useDeleteQuestionMutation, useFindAllQuestionsMutation } from "src/api/question";
 import GroupQuestionModal from "./components/GroupQuestionModal";
@@ -18,24 +18,29 @@ const ExamManagementPage = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10)
   const [findAllQuestions, { data, isLoading, error }] = useFindAllQuestionsMutation();
   const [deleteExam] = useDeleteQuestionMutation();
-  const [findAllExams, { data: examData, isExamLoading, isError }] = useFindAllExamMutation();
-  const [search, setSearch] = useState("");
+  const [findAllExams, { data: examData, isLoading: isExamLoading, isError }] = useFindAllExamMutation();
   const [examID, setExamID] = useState("");
+  const { data: currentExam } = useGetExamQuery(examID);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     loadData()
     setExamID(examIdQuery)
-  }, [findAllQuestions, search, examID, rowsPerPage]);
+  }, [findAllQuestions, search, examID, rowsPerPage, currentExam,isExamLoading]);
 
   const loadData = () => {
+    var _query = {}
+
+    if (currentExam) {
+      _query = { ...query, _id: { $in: currentExam?.data.questions || [] } }
+    }
+    console.log({ currentExam, _query, quesions: currentExam?.data.questions
+    });
     try {
       findAllQuestions(buidQuery({
         page: page,
         rowsPerPage: rowsPerPage,
-        populate: 'exam',
-        queryField: {
-          exam: examID
-        },
+        queryField: _query,
       }))
 
     } catch (error) {
@@ -69,9 +74,6 @@ const ExamManagementPage = () => {
       findAllExams(buidQuery({
         searchField: ["name"],
         search: value,
-        // queryField: {
-        //     type: type
-        // },
         page: 0,
         rowsPerPage: 10,
       }));
