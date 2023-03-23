@@ -1,5 +1,5 @@
-const { array } = require("prop-types");
 
+const audioFileRegex = /(\d+)(?:\.mp3$|-(\d+)\.mp3$)/;
 function buidQuery(options) {
     options = removeUndefined(options)
     var query = {
@@ -81,10 +81,20 @@ function isImageUrl(url) {
 function isAudioUrl(url) {
     return /\.(mp3|wav)$/.test(url);
 }
+function getQuestionName(str) {
+    const match = str.match(audioFileRegex);
+    if (match[2]) {
+        var _q2 = parseInt(match[2])
+        return _q2 <= 31 ? `${_q2}` : match[1] + '-' + match[2];
+    } else {
+        return `${parseInt(match[1])}`
+    }
+}
 export {
     buidQuery, getPaginator,
     removeUndefined, getUrlfromUploadRespond,
     getErrorMessage,
     isImageUrl,
-    isAudioUrl
+    isAudioUrl,
+    getQuestionName
 }

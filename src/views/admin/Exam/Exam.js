@@ -6,6 +6,7 @@ import { buidQuery, getPaginator } from "src/common/Funtion";
 import ExamModal from "./components/ExamModal";
 import { useFindAllExamCategoriesMutation } from "src/api/exam_category";
 import { useNavigate } from "react-router-dom";
+import ImportModal from "./components/ImportModal";
 const { Option } = Select;
 
 
@@ -19,6 +20,7 @@ const ExamManagementPage = () => {
     const [findAllExamCategorys, { data: categotyData }] = useFindAllExamCategoriesMutation();
     const [currentData, setCurrentData] = useState(null)
     const [isModalVisible, setIsModalVisible] = useState(false)
+    const [importModalVisible, setImportModalVisible] = useState(false)
     const [isInsert, setIsInsert] = useState(false)
     const [type, setType] = useState("");
     const [search, setSearch] = useState("");
@@ -39,6 +41,7 @@ const ExamManagementPage = () => {
                 // queryField: {
                 //     type: type
                 // },
+                populate:'questions',
                 page: page,
                 rowsPerPage: rowsPerPage,
             }));
@@ -93,6 +96,10 @@ const ExamManagementPage = () => {
             handleDelete(value)
         } else if (action == 3) {
             navigate(`/exam/quesions?examID=${value?.id || null}`)
+        } else if (action == 4) {
+            console.log(value);
+            setCurrentData(value)
+            setImportModalVisible(true)
         }
     }
     return (
@@ -138,6 +145,11 @@ const ExamManagementPage = () => {
                 onCancel={handleCalcel}
                 category={(categotyData?.data?.data || [])}
 
+            />
+            <ImportModal
+                visible={importModalVisible}
+                examId={currentData?.id}
+                onCancel={() => { setImportModalVisible(false) }}
             />
         </Card>
 
