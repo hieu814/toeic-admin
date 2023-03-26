@@ -1,7 +1,7 @@
 
 import { Space, Tag, Popconfirm } from 'antd';
-
-import React from 'react'
+import { Button } from 'antd';
+import React, { useEffect, useState } from 'react'
 import DataTable from 'react-data-table-component';
 import PropTypes from "prop-types";
 import {
@@ -11,13 +11,24 @@ import {
 export default function MyTable(props) {
     const { handleDelete,
         handleUpdate,
-        handlePreview,
+        handleDeleteMany,
         handleChangePage,
         handleChangeRowPerPage,
         totalPage,
         isloading,
         data,
     } = props;
+    const [selectedRows, setSelectedRows] = useState([]);
+    useEffect(() => {
+        setSelectedRows([])
+      }, [data]);
+    function deleteMany() {
+        let ids = Array.from((selectedRows || []), (field) => {
+            return field.id
+        })
+        handleDeleteMany(ids)
+
+    }
     const columns = [
         {
             name: 'group',
@@ -88,11 +99,26 @@ export default function MyTable(props) {
     ];
     return (
         <div>
+            <Button
+                danger
+                onClick={deleteMany}
+                style={{
+                    color: 'red',
+                    display: `${selectedRows.length == 0 ? 'none' : 'inline'}`,
+                    float: 'right'
+                }}
+            >Delete alll</Button>
             <DataTable
+                selectableRows
+                onSelectedRowsChange={state => {
+                    console.log(state.selectedRows);
+                    setSelectedRows(state.selectedRows);
+                }}
                 columns={columns}
                 data={data}
                 onChangePage={(p) => handleChangePage(p)}
                 pagination={true}
+                // totalPage={totalPage}
                 paginationTotalRows={totalPage}
                 onChangeRowsPerPage={(r) => handleChangeRowPerPage(r)}
                 paginationServer={true}
@@ -107,7 +133,7 @@ export default function MyTable(props) {
 MyTable.propTypes = {
     handleDelete: PropTypes.func,
     handleUpdate: PropTypes.func,
-    handlePreview: PropTypes.func,
+    handleDeleteMany: PropTypes.func,
     handleChangePage: PropTypes.func,
     handleChangeRowPerPage: PropTypes.func,
     totalPage: PropTypes.number,

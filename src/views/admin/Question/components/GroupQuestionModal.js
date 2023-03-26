@@ -31,7 +31,6 @@ const GroupQuestionModal = (props) => {
     const [currentPassage, setCurrentPassage] = useState(defaultPs)
     const [currentGroupQuestion, setCurrentGroupQuestion] = useState({})
     function handleUpdateQuestion(qs) {
-        console.log(qs);
         var _questions = currentGroupQuestion?.questions || []
         var _questions = [..._questions.filter((obj) => obj.number !== qs.number), { ...qs }]
         currentGroupQuestion.questions = _questions

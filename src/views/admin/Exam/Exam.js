@@ -6,7 +6,7 @@ import { buidQuery, getPaginator } from "src/common/Funtion";
 import ExamModal from "./components/ExamModal";
 import { useFindAllExamCategoriesMutation } from "src/api/exam_category";
 import { useNavigate } from "react-router-dom";
-import ImportModal from "./components/ImportModal";
+// import ImportModal from "./components/ImportModal";
 const { Option } = Select;
 
 
@@ -146,11 +146,7 @@ const ExamManagementPage = () => {
                 category={(categotyData?.data?.data || [])}
 
             />
-            <ImportModal
-                visible={importModalVisible}
-                examId={currentData?.id}
-                onCancel={() => { setImportModalVisible(false) }}
-            />
+
         </Card>
 
     );
