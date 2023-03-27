@@ -36,7 +36,7 @@ const _nav = [
     to: '/user',
     icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
   },
-  
+
   {
     component: CNavGroup,
     name: 'Exam',
@@ -81,39 +81,23 @@ const _nav = [
     ],
   },
   {
-    component: CNavItem,
-    name: 'Docs',
-    href: 'https://coreui.io/react/docs/templates/installation/',
-    icon: <CIcon icon={cilDescription} customClassName="nav-icon" />,
-  },
-  {
-    component: CNavItem,
-    name: 'Typography',
-    to: '/theme/typography',
-    icon: <CIcon icon={cilPencil} customClassName="nav-icon" />,
-  },
-  {
-    component: CNavTitle,
-    name: 'Components',
-  },
-  {
     component: CNavGroup,
-    name: 'Base',
-    to: '/base',
+    name: 'Word',
+    to: '/word',
     icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
     items: [
       {
         component: CNavItem,
-        name: 'Accordion',
-        to: '/base/accordion',
-      }
+        name: 'Word',
+        to: '/word',
+      },
+      {
+        component: CNavItem,
+        name: 'Category',
+        to: '/word/category',
+      },
+
     ],
-  },
-  {
-    component: CNavItem,
-    name: 'Docs',
-    href: 'https://coreui.io/react/docs/templates/installation/',
-    icon: <CIcon icon={cilDescription} customClassName="nav-icon" />,
   },
 ]
 

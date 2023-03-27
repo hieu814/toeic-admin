@@ -8,10 +8,10 @@ import {
     DeleteOutlined, EditOutlined,
 
 } from '@ant-design/icons';
+import MyImage from 'src/components/MyImage';
+import WordCategoryAction from './WordCategoryAction';
 export default function MyTable(props) {
-    const { handleDelete,
-        handleUpdate,
-        handlePreview,
+    const { handleAction,
         handleChangePage,
         handleChangeRowPerPage,
         totalPage,
@@ -20,40 +20,35 @@ export default function MyTable(props) {
     } = props;
     const columns = [
         {
-            name: 'Username',
-            selector: 'username',
+            name: 'ID',
+            selector: (row, i) => row.id,
             sortable: true,
         },
         {
-            name: 'Email',
-            selector: 'email',
+            name: 'Name',
+            selector: (row, i) => row.name,
             sortable: true,
         },
+
         {
-            name: "Role",
-            selector: 'role',
+            name: 'Image',
             cell: (row) => (
-                <Tag color={row?.role === 1 ? "red" : "blue"}>{role}</Tag>
-            )
+                <MyImage
+                width={80}
+                height={80}
+                src={`${process.env.REACT_APP_BACKEND_URL}${row?.image}`}
+            />
+            ),
         },
         {
             name: 'Actions',
             cell: (record) => (
+                <WordCategoryAction
+                    onSelect={(key) => {
+                        handleAction(key, record)
+                    }}
+                />
 
-                <Space>
-                    <>
-                        <Popconfirm
-                            title="Are you sure you want to delete this record?"
-                            onConfirm={() => handleUpdate(record)}
-                            okText="Yes"
-                            cancelText="No"
-                        >
-                            <DeleteOutlined style={{ color: "#FF0000" }} onClick={() => handleDelete(record)} />
-                        </Popconfirm>
-
-                        <EditOutlined onClick={() => handleUpdate(record)} />
-                    </>
-                </Space>
 
             ),
             button: true,
@@ -79,7 +74,7 @@ export default function MyTable(props) {
 }
 
 MyTable.propTypes = {
-    handleDelete: PropTypes.func,
+    handleAction: PropTypes.func,
     handleUpdate: PropTypes.func,
     handlePreview: PropTypes.func,
     handleChangePage: PropTypes.func,

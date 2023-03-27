@@ -1,90 +1,108 @@
 import React, { useEffect, useState } from "react";
-import { Space, Select, Input, Button, Card, Modal } from "antd";
-import { useFindAllUserMutation, useAddUserMutation } from "src/api/user";
-import PropTypes from "prop-types";
-import DataTable from "react-data-table-component";
-import MyTable from "./components/UserTable";
+import { Space, Select, Input, Button, Card, message } from "antd";
+import { useDeleteArticleMutation, useFindAllArticleMutation } from "src/api/article";
+import MyTable from "./components/ArticleTable";
 import { buidQuery, getPaginator } from "src/common/Funtion";
-import UserModal from "./components/UserModal";
+import ArticleModal from "./components/ArticleModal";
+import { useFindAllArticleCategoriesMutation } from "src/api/article_category";
+import { useNavigate } from "react-router-dom";
+// import ImportModal from "./components/ImportModal";
 const { Option } = Select;
 
 
 
-const UserManagementPage = () => {
+const ArticleManagementPage = () => {
+    const navigate = useNavigate();
     const [page, setPage] = useState(1)
-    const [totalPage, setTotalPage] = useState(1)
     const [rowsPerPage, setRowsPerPage] = useState(10)
-    const [findAllUsers, { data, isLoading, isError }] = useFindAllUserMutation();
+    const [findAllArticles, { data, isLoading, isError }] = useFindAllArticleMutation();
+    const [deleteArticle] = useDeleteArticleMutation();
+    const [findAllArticleCategorys, { data: categotyData }] = useFindAllArticleCategoriesMutation();
     const [currentData, setCurrentData] = useState(null)
     const [isModalVisible, setIsModalVisible] = useState(false)
+    const [importModalVisible, setImportModalVisible] = useState(false)
     const [isInsert, setIsInsert] = useState(false)
-    const [role, setRole] = useState("");
+    const [type, setType] = useState("");
     const [search, setSearch] = useState("");
 
     useEffect(() => {
-        // Call the findAllUsers function with the search and role filter parameters
         loadData()
 
-    }, [findAllUsers, search, role, rowsPerPage]);
+    }, [findAllArticles, search, type, rowsPerPage]);
     const loadData = () => {
         try {
-            findAllUsers(buidQuery({
-                searchField: ["username", "email", "name"],
+            findAllArticleCategorys(buidQuery({
+                page: 1,
+                rowsPerPage: 100,
+            }))
+            findAllArticles(buidQuery({
+                searchField: ["name"],
                 search: search,
                 queryField: {
-                    userType: role
+                    category: type
                 },
                 page: page,
                 rowsPerPage: rowsPerPage,
             }));
         } catch (error) {
-            console.log(error.data);
+            console.log(JSON.stringify(error.data));
         }
 
     }
-    const handleRoleChange = (value) => {
-        setRole(value);
+    const handleTypeChange = (value) => {
+        setType(value);
     };
 
     const handleSearch = (e) => {
         setSearch(e);
     };
     function handleDelete(params) {
+        console.log("delete ", params);
+        deleteArticle(params.id)
+            .unwrap()
+            .then((respond) => {
+                message.success(respond.message)
+                loadData()
+            })
+            .catch((err) => {
+                console.log(err);
 
+            });
     }
     function handleInsert(params) {
         setIsInsert(true)
-        setCurrentData({})
+        setCurrentData({ image: "asdadsa" })
         setIsModalVisible(true)
     }
     function handleUpdate(params) {
 
         setIsInsert(false)
         setCurrentData(params)
+        console.log(params);
         setIsModalVisible(true)
 
     }
     function handleCalcel(params) {
+        loadData()
         setCurrentData({})
         setIsModalVisible(false)
-
     }
     return (
 
-        <Card title={`User Management `}>
-
+        <Card title={`Article Management`}>
             <Space>
                 <Select
-                    defaultValue={1}
+                    defaultValue={""}
                     style={{ width: 120 }}
-                    onChange={handleRoleChange}
+                    onChange={handleTypeChange}
                 >
-                    <Option value={null}>All User</Option>
-                    <Option value={2}>Admin</Option>
-                    <Option value={1}>User</Option>
+                    {(categotyData?.data?.data || []).map(fbb =>
+                        <Option key={fbb.key} value={fbb.id}>{fbb.name}</Option>
+                    )};
+
                 </Select>
                 <Input.Search
-                    placeholder="Search by username or email"
+                    placeholder="Search by name"
                     onChange={(e) => {
                         if (!e.target.value)
                             setSearch("")
@@ -93,7 +111,7 @@ const UserManagementPage = () => {
                     style={{ width: 300 }}
                 />
                 <Button type="primary" onClick={handleInsert}>
-                    Add User
+                    Add
                 </Button>
             </Space>
             <MyTable
@@ -103,18 +121,21 @@ const UserManagementPage = () => {
                 handleDelete={handleDelete}
                 handleUpdate={handleUpdate}
                 handleChangeRowPerPage={setRowsPerPage}
+                handleChangePage={setPage}
 
             />
-            <UserModal
+            <ArticleModal
                 visible={isModalVisible}
                 isInsert={isInsert}
                 data={currentData}
                 onCancel={handleCalcel}
+                category={(categotyData?.data?.data || [])}
 
             />
+
         </Card>
 
     );
 }
 
-export default UserManagementPage;
+export default ArticleManagementPage;

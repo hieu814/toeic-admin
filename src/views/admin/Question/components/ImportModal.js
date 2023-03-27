@@ -1,7 +1,7 @@
 
 
 import React, { useEffect, useState } from 'react';
-import { Modal, Button, message, Spin, Tabs, Card, Upload, Select, Form, } from 'antd';
+import { Modal, Button, message, Upload, Select, Form, } from 'antd';
 import PropTypes from 'prop-types';
 
 import { useBulkInsertQuestionsMutation, useFindAllQuestionsMutation, useBulkUpdateQuestionsMutation, useUpdateQuestionMutation } from 'src/api/question';
@@ -9,7 +9,7 @@ import { useBulkInsertQuestionsMutation, useFindAllQuestionsMutation, useBulkUpd
 import Papa from 'papaparse';
 import { UploadOutlined } from '@ant-design/icons';
 import { uploadFileApi } from 'src/api/upload';
-import { buidQuery, convertToJson, downloadCSV, extractSubstring, getQuestionName, parseExcelFile, parseQuestion, toCSV } from 'src/common/Funtion';
+import { buidQuery,  getQuestionName, parseExcelFile, parseQuestion } from 'src/common/Funtion';
 import { useGetExamQuery, useUpdateExamMutation } from 'src/api/exam';
 const { Option } = Select;
 
