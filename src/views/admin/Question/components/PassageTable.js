@@ -8,6 +8,7 @@ import {
 
 } from '@ant-design/icons';
 import MyImage from 'src/components/MyImage';
+import { checkUrl } from 'src/common/Funtion';
 export default function PassageTable(props) {
     const { handleDelete,
         handleUpdate,
@@ -29,7 +30,7 @@ export default function PassageTable(props) {
                     <MyImage
                         width={80}
                         height={80}
-                        src={`${process.env.REACT_APP_BACKEND_URL}${imageSrc}`}
+                        src={checkUrl(imageSrc)}
                     />
 
                 </>

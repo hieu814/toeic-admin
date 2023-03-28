@@ -3,7 +3,7 @@ import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { message, Upload } from 'antd';
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { getUrlfromUploadRespond } from 'src/common/Funtion';
+import { checkUrl, getUrlfromUploadRespond } from 'src/common/Funtion';
 const getBase64 = (img, callback) => {
     const reader = new FileReader();
     reader.addEventListener('load', () => callback(reader.result));
@@ -67,7 +67,7 @@ const CustomUpload = (props) => {
             >
                 {value ? (
                     <img
-                        src={`${process.env.REACT_APP_BACKEND_URL}${value}`}
+                        src={checkUrl(value)}
                         alt="avatar"
                         style={{
                             width: 80,

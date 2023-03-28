@@ -1,10 +1,12 @@
 
-import { Tag } from 'antd';
+import { Button, Tag } from 'antd';
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import DataTable from 'react-data-table-component';
 import PropTypes from "prop-types";
 import WordAction from './WordAction';
+import MyImage from 'src/components/MyImage';
+import { checkUrl } from 'src/common/Funtion';
 
 
 
@@ -14,18 +16,38 @@ export default function MyTable(props) {
         handleChangeRowPerPage,
         totalPage,
         isloading,
+        handleDeleteMany,
+        rowsPerPage,
         data,
     } = props;
+    const [selectedRows, setSelectedRows] = useState([]);
+
+    useEffect(() => {
+        setSelectedRows([])
+    }, [data]);
+    function deleteMany() {
+        let ids = Array.from((selectedRows || []), (field) => {
+            return field.id
+        })
+        handleDeleteMany(ids)
+
+    }
     const columns = [
-        {
-            name: 'ID',
-            selector: (row, i) => row.id,
-            sortable: true,
-        },
+
         {
             name: 'Name',
             selector: (row, i) => row.name,
             sortable: true,
+        },
+        {
+            name: 'Image',
+            cell: (row) => (
+                <MyImage
+                    width={80}
+                    height={80}
+                    src={checkUrl(row?.image)}
+                />
+            ),
         },
 
         {
@@ -43,22 +65,7 @@ export default function MyTable(props) {
             selector: (row, i) => row.definition,
             sortable: true,
         },
-        {
-            name: 'Image',
-            cell: (row) => (
-                <img src={`${process.env.REACT_APP_BACKEND_URL}${row?.image}`}
-                    onError={(e) => {
-                        e.target.src = "https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg";
-                    }}
-                    style={{
-                        width: 80,
-                        height: 80,
-                        margin: '10px',
-                        borderRadius: '10%'
-                    }}
-                />
-            ),
-        },
+
 
         {
             name: 'Actions',
@@ -76,13 +83,27 @@ export default function MyTable(props) {
     ];
     return (
         <div>
+            <Button
+                danger
+                onClick={deleteMany}
+                style={{
+                    color: 'red',
+                    display: `${selectedRows.length == 0 ? 'none' : 'inline'}`,
+                    float: 'right'
+                }}
+            >Delete alll</Button>
             <DataTable
+                selectableRows
+                onSelectedRowsChange={state => {
+                    console.log(state.selectedRows);
+                    setSelectedRows(state.selectedRows);
+                }}
                 columns={columns}
                 data={data}
-
                 onChangePage={(p) => handleChangePage(p)}
                 pagination={true}
-                paginationTotalRows={totalPage}
+                // totalPage={totalPage}
+                paginationTotalRows={totalPage * rowsPerPage}
                 onChangeRowsPerPage={(r) => handleChangeRowPerPage(r)}
                 paginationServer={true}
                 progressPending={isloading}
@@ -100,4 +121,6 @@ MyTable.propTypes = {
     totalPage: PropTypes.number,
     isloading: PropTypes.bool,
     data: PropTypes.any,
+    handleDeleteMany: PropTypes.func,
+    rowsPerPage: PropTypes.number
 };

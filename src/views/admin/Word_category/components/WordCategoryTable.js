@@ -10,6 +10,7 @@ import {
 } from '@ant-design/icons';
 import MyImage from 'src/components/MyImage';
 import WordCategoryAction from './WordCategoryAction';
+import { checkUrl } from 'src/common/Funtion';
 export default function MyTable(props) {
     const { handleAction,
         handleChangePage,
@@ -34,10 +35,10 @@ export default function MyTable(props) {
             name: 'Image',
             cell: (row) => (
                 <MyImage
-                width={80}
-                height={80}
-                src={`${process.env.REACT_APP_BACKEND_URL}${row?.image}`}
-            />
+                    width={80}
+                    height={80}
+                    src={checkUrl(row?.image)}
+                />
             ),
         },
         {

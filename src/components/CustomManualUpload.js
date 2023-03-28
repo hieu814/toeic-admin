@@ -2,6 +2,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { Modal, Upload } from 'antd';
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { checkUrl } from 'src/common/Funtion';
 const getBase64 = (file) =>
     new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -21,7 +22,7 @@ const CustomManualUpload = ({ url = '', maxCount = 1, onChange, value }) => {
                 uid: '-1',
                 name: 'file',
                 status: 'done',
-                url: `${process.env.REACT_APP_BACKEND_URL}${url}`,
+                url: checkUrl(url),
             }
         ] : [])
     }, [url]);

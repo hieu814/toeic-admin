@@ -9,6 +9,7 @@ import {
 
 } from '@ant-design/icons';
 import MyImage from 'src/components/MyImage';
+import { checkUrl } from 'src/common/Funtion';
 export default function MyTable(props) {
     const { handleDelete,
         handleUpdate,
@@ -41,7 +42,7 @@ export default function MyTable(props) {
                 <MyImage
                     width={80}
                     height={80}
-                    src={`${process.env.REACT_APP_BACKEND_URL}${row?.thumbail}`}
+                    src={checkUrl(row?.thumbail)}
                 />
 
             ),

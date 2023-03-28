@@ -42,6 +42,15 @@ function buidQuery(options) {
     return query;
 
 }
+function convertKeysToLowercase(obj) {
+    const newObj = {};
+
+    for (let key in obj) {
+        newObj[key.toLowerCase()] = obj[key];
+    }
+
+    return newObj;
+}
 function getPaginator(res) {
 
     if (res?.status === "SUCCESS" && res?.data?.paginator) {
@@ -118,7 +127,7 @@ const downloadCSV = (data) => {
     link.href = url;
     link.setAttribute('download', 'data.csv');
     link.click();
-  };
+};
 function extractSubstring(inputString) {
     const regex = /([\d\-]+)(?:_p(\d+))?/;
     const matches = inputString.match(regex);
@@ -185,7 +194,7 @@ function parseExcelFile(file) {
         const reader = new FileReader();
         reader.onload = (event) => {
             const data = new Uint8Array(event.target.result);
-            console.log({ data });
+
             const workbook = XLSX.read(data, { type: 'array' });
             const worksheet = workbook.Sheets[workbook.SheetNames[0]];
             const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
@@ -196,6 +205,10 @@ function parseExcelFile(file) {
         };
         reader.readAsArrayBuffer(file);
     });
+}
+function checkUrl(url = "") {
+    if (!url) return ""
+    return url.includes("http") ? url : `${process.env.REACT_APP_BACKEND_URL}${url}`
 }
 export {
     buidQuery, getPaginator,
@@ -209,5 +222,7 @@ export {
     extractSubstring,
     toCSV,
     parseExcelFile,
-    downloadCSV
+    downloadCSV,
+    convertKeysToLowercase,
+    checkUrl
 }
