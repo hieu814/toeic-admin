@@ -46,18 +46,18 @@ const ExamAction = ({ onSelect }) => {
             icon: <CommentOutlined />,
 
         },
-        {
-            label: 'Import',
-            key: 4,
-            icon: <FileSyncOutlined />,
+        // {
+        //     label: 'Import',
+        //     key: 4,
+        //     icon: <FileSyncOutlined />,
 
-        },
-        {
-            label: 'Export',
-            key: 5,
-            icon: <ExportOutlined />,
+        // },
+        // {
+        //     label: 'Export',
+        //     key: 5,
+        //     icon: <ExportOutlined />,
 
-        },
+        // },
     ];
 
     const menuProps = {
@@ -68,7 +68,7 @@ const ExamAction = ({ onSelect }) => {
         <Dropdown menu={menuProps}>
             <Button>
                 <Space>
-                    Button
+                    Action
                     <DownOutlined />
                 </Space>
             </Button>

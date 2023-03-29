@@ -143,21 +143,7 @@ const CategoryModal = (props) => {
                     >
                         <CustomUpload />
                     </Form.Item>
-                    <Form.Item
-                        name="type"
-                        label="Type"
-                        rules={[
-                            {
-                                required: isInsert,
-                                message: 'Please select type!',
-                            },
-                        ]}
-                    >
-                        <Select placeholder="select type">
-                            <Option value={2}>Article</Option>
-                            <Option value={1}>Lession</Option>
-                        </Select>
-                    </Form.Item>
+
                     <Form.Item name="isActive" label="Active" valuePropName="checked">
                         <Switch />
                     </Form.Item>

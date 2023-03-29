@@ -11,9 +11,12 @@ import {
 import { getStyle } from '@coreui/utils'
 import { CChartBar, CChartLine } from '@coreui/react-chartjs'
 import CIcon from '@coreui/icons-react'
-import { cilArrowBottom, cilArrowTop, cilOptions } from '@coreui/icons'
-
-const WidgetsDropdown = () => {
+import { cilOptions } from '@coreui/icons'
+import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom'
+const WidgetsDropdown = (props) => {
+  const { userCount = 0, examCount = 0, wordCount = 0, articleCount = 0 } = props
+  const navigate = useNavigate();
   return (
     <CRow>
       <CCol sm={6} lg={3}>
@@ -22,24 +25,18 @@ const WidgetsDropdown = () => {
           color="primary"
           value={
             <>
-              26K{' '}
-              <span className="fs-6 fw-normal">
-                (-12.4% <CIcon icon={cilArrowBottom} />)
-              </span>
+              {userCount}
             </>
           }
           title="Users"
           action={
             <CDropdown alignment="end">
               <CDropdownToggle color="transparent" caret={false} className="p-0">
-                <CIcon icon={cilOptions} className="text-high-emphasis-inverse" />
+                <CIcon icon={cilOptions} onClick={() => {
+                  navigate("/user")
+                }} className="text-high-emphasis-inverse" />
               </CDropdownToggle>
-              <CDropdownMenu>
-                <CDropdownItem>Action</CDropdownItem>
-                <CDropdownItem>Another action</CDropdownItem>
-                <CDropdownItem>Something else here...</CDropdownItem>
-                <CDropdownItem disabled>Disabled action</CDropdownItem>
-              </CDropdownMenu>
+
             </CDropdown>
           }
           chart={
@@ -109,24 +106,18 @@ const WidgetsDropdown = () => {
           color="info"
           value={
             <>
-              $6.200{' '}
-              <span className="fs-6 fw-normal">
-                (40.9% <CIcon icon={cilArrowTop} />)
-              </span>
+              {examCount}
             </>
           }
-          title="Income"
+          title="Exams"
           action={
             <CDropdown alignment="end">
               <CDropdownToggle color="transparent" caret={false} className="p-0">
-                <CIcon icon={cilOptions} className="text-high-emphasis-inverse" />
+                <CIcon icon={cilOptions} onClick={() => {
+                  navigate("/exam")
+                }} className="text-high-emphasis-inverse" />
               </CDropdownToggle>
-              <CDropdownMenu>
-                <CDropdownItem>Action</CDropdownItem>
-                <CDropdownItem>Another action</CDropdownItem>
-                <CDropdownItem>Something else here...</CDropdownItem>
-                <CDropdownItem disabled>Disabled action</CDropdownItem>
-              </CDropdownMenu>
+
             </CDropdown>
           }
           chart={
@@ -195,24 +186,18 @@ const WidgetsDropdown = () => {
           color="warning"
           value={
             <>
-              2.49{' '}
-              <span className="fs-6 fw-normal">
-                (84.7% <CIcon icon={cilArrowTop} />)
-              </span>
+              {wordCount}
             </>
           }
-          title="Conversion Rate"
+          title="Word"
           action={
             <CDropdown alignment="end">
               <CDropdownToggle color="transparent" caret={false} className="p-0">
-                <CIcon icon={cilOptions} className="text-high-emphasis-inverse" />
+                <CIcon icon={cilOptions} onClick={() => {
+                  navigate("/word")
+                }} className="text-high-emphasis-inverse" />
               </CDropdownToggle>
-              <CDropdownMenu>
-                <CDropdownItem>Action</CDropdownItem>
-                <CDropdownItem>Another action</CDropdownItem>
-                <CDropdownItem>Something else here...</CDropdownItem>
-                <CDropdownItem disabled>Disabled action</CDropdownItem>
-              </CDropdownMenu>
+
             </CDropdown>
           }
           chart={
@@ -268,24 +253,18 @@ const WidgetsDropdown = () => {
           color="danger"
           value={
             <>
-              44K{' '}
-              <span className="fs-6 fw-normal">
-                (-23.6% <CIcon icon={cilArrowBottom} />)
-              </span>
+              {articleCount}
             </>
           }
-          title="Sessions"
+          title="Lession"
           action={
             <CDropdown alignment="end">
               <CDropdownToggle color="transparent" caret={false} className="p-0">
-                <CIcon icon={cilOptions} className="text-high-emphasis-inverse" />
+                <CIcon icon={cilOptions} onClick={() => {
+                  navigate("/article")
+                }} className="text-high-emphasis-inverse" />
               </CDropdownToggle>
-              <CDropdownMenu>
-                <CDropdownItem>Action</CDropdownItem>
-                <CDropdownItem>Another action</CDropdownItem>
-                <CDropdownItem>Something else here...</CDropdownItem>
-                <CDropdownItem disabled>Disabled action</CDropdownItem>
-              </CDropdownMenu>
+
             </CDropdown>
           }
           chart={
@@ -357,5 +336,12 @@ const WidgetsDropdown = () => {
     </CRow>
   )
 }
+//  const { userCount = 0, examCount = 0, wordCount = 0, articleCount = 0 } = props
+WidgetsDropdown.propTypes = {
+  userCount: PropTypes.number,
+  examCount: PropTypes.number,
+  wordCount: PropTypes.number,
+  articleCount: PropTypes.number,
 
+}
 export default WidgetsDropdown

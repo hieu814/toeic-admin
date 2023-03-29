@@ -11,10 +11,25 @@ import {
   CInputGroupText,
   CRow,
 } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
-import { cilLockLocked, cilUser } from '@coreui/icons'
+import { useForgotPasswordMutation } from 'src/api/auth'
+import { message } from 'antd'
+
 
 const Register = () => {
+  const [forgotPassword] = useForgotPasswordMutation()
+  function forgot(e) {
+    e.preventDefault()
+    console.log(e.target.email.value);
+    forgotPassword(e.target.email.value).unwrap()
+      .then((respond) => {
+        console.log(respond);
+        message.success(respond.message)
+      })
+      .catch((err) => {
+        message.error(err.message)
+
+      });
+  }
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
@@ -22,41 +37,15 @@ const Register = () => {
           <CCol md={9} lg={7} xl={6}>
             <CCard className="mx-4">
               <CCardBody className="p-4">
-                <CForm>
-                  <h1>Register</h1>
-                  <p className="text-medium-emphasis">Create your account</p>
-                  <CInputGroup className="mb-3">
-                    <CInputGroupText>
-                      <CIcon icon={cilUser} />
-                    </CInputGroupText>
-                    <CFormInput placeholder="Username" autoComplete="username" />
-                  </CInputGroup>
+                <CForm id='form-id' onSubmit={forgot}>
+                  <h1>Forgot password</h1>
+                  <p className="text-medium-emphasis">Send vertify email</p>
                   <CInputGroup className="mb-3">
                     <CInputGroupText>@</CInputGroupText>
-                    <CFormInput placeholder="Email" autoComplete="email" />
-                  </CInputGroup>
-                  <CInputGroup className="mb-3">
-                    <CInputGroupText>
-                      <CIcon icon={cilLockLocked} />
-                    </CInputGroupText>
-                    <CFormInput
-                      type="password"
-                      placeholder="Password"
-                      autoComplete="new-password"
-                    />
-                  </CInputGroup>
-                  <CInputGroup className="mb-4">
-                    <CInputGroupText>
-                      <CIcon icon={cilLockLocked} />
-                    </CInputGroupText>
-                    <CFormInput
-                      type="password"
-                      placeholder="Repeat password"
-                      autoComplete="new-password"
-                    />
+                    <CFormInput type='email' placeholder="Email" autoComplete="email" name='email' />
                   </CInputGroup>
                   <div className="d-grid">
-                    <CButton color="success">Create Account</CButton>
+                    <CButton key="update" htmlType='submit' type="primary" form="form-id" color="success">Send vertify</CButton>
                   </div>
                 </CForm>
               </CCardBody>
