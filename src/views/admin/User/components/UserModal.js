@@ -35,10 +35,12 @@ const UserModal = (props) => {
         if (isInsert) {
             addUser(values)
                 .then((respond) => {
+                    // console.log({ respond });
+                    if (!respond.error) {
+                        message.success(respond.message)
+                        handleCalcel()
+                    }
 
-                    console.log(respond);
-                    message.success(respond.message)
-                    handleCalcel()
                 })
                 .catch((err) => {
                     console.log(err);
@@ -49,9 +51,10 @@ const UserModal = (props) => {
             updateUser(values)
                 .unwrap()
                 .then((respond) => {
-                    message.success(respond.message)
-                    console.log(`updated: ${JSON.stringify(respond)}`);
-                    handleCalcel()
+                    if (!respond.error) {
+                        message.success(respond.message)
+                        handleCalcel()
+                    }
                 })
                 .catch((err) => {
                     console.log(err);

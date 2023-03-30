@@ -43,10 +43,10 @@ const ArticleModal = (props) => {
         if (isInsert) {
             addArticle(values)
                 .then((respond) => {
-
-                    console.log(respond);
-                    message.success(respond.message)
-                    // handleCalcel()
+                    if (!respond.error) {
+                        message.success(respond.message)
+                        handleCalcel()
+                    }
                 })
                 .catch((err) => {
                     console.log(err);
@@ -57,15 +57,16 @@ const ArticleModal = (props) => {
             updateArticle(values)
                 .unwrap()
                 .then((respond) => {
-                    message.success(respond.message)
-                    handleCalcel()
+                    if (!respond.error) {
+                        message.success(respond.message)
+                        handleCalcel()
+                    }
                 })
                 .catch((err) => {
                     console.log(err);
 
                 });
         }
-        handleCalcel()
 
     };
     const handleEditorChange = (event, editor) => {

@@ -8,7 +8,14 @@ import { buidQuery, getPaginator } from "src/common/Funtion";
 import UserModal from "./components/UserModal";
 const { Option } = Select;
 
+const defaultUser = {
+    email: "",
+    password: "",
+    nickname: "",
+    phone: "",
+    intro: "",
 
+}
 
 const UserManagementPage = () => {
     const [page, setPage] = useState(1)
@@ -16,7 +23,7 @@ const UserManagementPage = () => {
     const [rowsPerPage, setRowsPerPage] = useState(10)
     const [findAllUsers, { data, isLoading, isError }] = useFindAllUserMutation();
     const [deleteUser] = useDeleteUserMutation();
-    const [currentData, setCurrentData] = useState(null)
+    const [currentData, setCurrentData] = useState(defaultUser)
     const [isModalVisible, setIsModalVisible] = useState(false)
     const [isInsert, setIsInsert] = useState(false)
     const [role, setRole] = useState("");
@@ -65,7 +72,7 @@ const UserManagementPage = () => {
     }
     function handleInsert(params) {
         setIsInsert(true)
-        setCurrentData({})
+        setCurrentData(defaultUser)
         setIsModalVisible(true)
     }
     function handleUpdate(params) {
@@ -76,7 +83,7 @@ const UserManagementPage = () => {
 
     }
     function handleCalcel(params) {
-        setCurrentData({})
+        setCurrentData(defaultUser)
         setIsModalVisible(false)
 
     }
