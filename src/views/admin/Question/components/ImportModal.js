@@ -9,7 +9,7 @@ import { useBulkInsertQuestionsMutation, useFindAllQuestionsMutation, useBulkUpd
 import Papa from 'papaparse';
 import { UploadOutlined } from '@ant-design/icons';
 import { uploadFileApi } from 'src/api/upload';
-import { buidQuery,  getQuestionName, parseExcelFile, parseQuestion } from 'src/common/Funtion';
+import { buidQuery, getQuestionName, parseExcelFile, parseQuestion } from 'src/common/Funtion';
 import { useGetExamQuery, useUpdateExamMutation } from 'src/api/exam';
 const { Option } = Select;
 
@@ -50,6 +50,8 @@ const ImportModal = (props) => {
         } catch (error) {
             console.error(error);
         }
+        setErrorMsg("")
+        onComplete()
         setIsloading(false)
     };
     function csvToJson(csvFile) {
@@ -86,6 +88,8 @@ const ImportModal = (props) => {
     }
     function importQuestion() {
         return new Promise((resolve, reject) => {
+            var examType = exam?.data.type ?? 0
+            console.log({ examType });
             parseExcelFile(fileList[0]).then((arr) => {
                 var _question = []
                 arr.forEach((val) => {
@@ -96,7 +100,8 @@ const ImportModal = (props) => {
                             type: val?.type,
                             transcript: val?.transcript
                         })
-                        _question.push(qs)
+                        if (examType <= 1 || (examType - 1) == (val?.type))
+                            _question.push(qs)
                     }
 
                 })

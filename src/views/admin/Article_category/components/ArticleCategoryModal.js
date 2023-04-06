@@ -137,7 +137,7 @@ const CategoryModal = (props) => {
                         rules={[
                             {
                                 required: isInsert,
-                                message: 'Please select type!',
+                                message: 'Please select image!',
                             },
                         ]}
                     >

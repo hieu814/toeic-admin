@@ -104,6 +104,28 @@ const CategoryModal = (props) => {
                     scrollToFirstError
                 >
                     <Form.Item
+                        name="type"
+                        label="Type"
+                        rules={[
+                            {
+                                required: isInsert,
+                                message: 'Please select type!',
+                            },
+                        ]}
+                    >
+                        <Select placeholder="select type">
+                            <Option value={0}>Full Test</Option>
+                            <Option value={1}>Mini Test</Option>
+                            <Option value={2}>Part 1</Option>
+                            <Option value={3}>Part 2</Option>
+                            <Option value={4}>Part 3</Option>
+                            <Option value={5}>Part 4</Option>
+                            <Option value={6}>Part 5</Option>
+                            <Option value={7}>Part 6</Option>
+                            <Option value={8}>Part 7</Option>
+                        </Select>
+                    </Form.Item>
+                    <Form.Item
                         name="name"
                         label="name"
                         // tooltip="To login"
@@ -137,7 +159,7 @@ const CategoryModal = (props) => {
                         rules={[
                             {
                                 required: isInsert,
-                                message: 'Please select type!',
+                                message: 'Please select image!',
                             },
                         ]}
                     >

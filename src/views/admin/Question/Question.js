@@ -105,6 +105,9 @@ const ExamManagementPage = () => {
     console.log('onSelect', found);
     setExamID(found.id)
   };
+  function handleComplete() {
+    loadData()
+  }
   const searchResult = (data) => {
     console.log(JSON.stringify(data));
     if (!Array.isArray(data) || data.length == 0) return []
@@ -192,6 +195,10 @@ const ExamManagementPage = () => {
         visible={importModalVisible}
         examId={examIdQuery}
         onCancel={() => { setImportModalVisible(false) }}
+        onComplete={() => {
+          setImportModalVisible(false)
+          handleComplete()
+        }}
       />
     </Card>
 
