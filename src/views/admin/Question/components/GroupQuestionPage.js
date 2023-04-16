@@ -52,7 +52,7 @@ const defaultGroupQuestion = {
     audio: "",
     transcript: "",
     questions: [],
-    passages: []
+    passage: ""
 }
 const GroupQuestionModal = (props) => {
     const query = new URLSearchParams(useLocation().search);
@@ -68,6 +68,7 @@ const GroupQuestionModal = (props) => {
     const [group, setGroup] = useState("")
     const [groupLabel, setGroupLabel] = useState("")
     const [transcript, setTranscript] = useState("")
+    const [passage, setPassage] = useState("");
     const [isloading, setIsloading] = useState(false)
     const [examID, setExamID] = useState(examIdQuery)
     const [type, setType] = useState(1);
@@ -85,26 +86,26 @@ const GroupQuestionModal = (props) => {
         setCurrentQuestion(defaultQs)
         setQuestionModalVisible(false)
     }
-    function handleUpdatePassage(ps) {
-        var _passages = currentGroupQuestion?.passages || []
-        var _passages = [..._passages.filter((obj) => obj.number !== ps.number), { ...ps }]
-        currentGroupQuestion.passages = _passages
-        setCurrentGroupQuestion(currentGroupQuestion)
-        setCurrentPassage(defaultPs)
-        setPassageModalVisible(false)
-    }
+    // function handleUpdatePassage(ps) {
+    //     var _passages = currentGroupQuestion?.passages || []
+    //     var _passages = [..._passages.filter((obj) => obj.number !== ps.number), { ...ps }]
+    //     currentGroupQuestion.passages = _passages
+    //     setCurrentGroupQuestion(currentGroupQuestion)
+    //     setCurrentPassage(defaultPs)
+    //     setPassageModalVisible(false)
+    // }
     function handleDeleteQuestion(qs) {
         var _questions = currentGroupQuestion?.questions || []
         _questions = _questions.filter((obj) => obj.number !== qs.number)
         currentGroupQuestion.questions = _questions
         setCurrentGroupQuestion({ ...currentGroupQuestion })
     }
-    function handleDeletePassage(ps) {
-        var _passages = currentGroupQuestion?.passages || []
-        _passages = _passages.filter((obj) => obj.number !== ps.number)
-        currentGroupQuestion.passages = _passages
-        setCurrentGroupQuestion({ ...currentGroupQuestion })
-    }
+    // function handleDeletePassage(ps) {
+    //     var _passages = currentGroupQuestion?.passages || []
+    //     _passages = _passages.filter((obj) => obj.number !== ps.number)
+    //     currentGroupQuestion.passages = _passages
+    //     setCurrentGroupQuestion({ ...currentGroupQuestion })
+    // }
     async function onFinish() {
         setIsloading(true)
         const update = new Promise(async (resolve, reject) => {
@@ -130,7 +131,7 @@ const GroupQuestionModal = (props) => {
                     currentGroupQuestion.audio = ""
                 })
             }
-            var qs = { ...currentGroupQuestion, exam: examIdQuery || "", type: type, group: group, label: groupLabel, transcript: transcript, exam: examIdQuery || '' }
+            var qs = { ...currentGroupQuestion, exam: examIdQuery || "", type: type, group: group, label: groupLabel, transcript: transcript, exam: examIdQuery || '', passage: passage }
             console.log({ qs });
             if (questionIdQuery) {
                 updateQuestion(qs)
@@ -194,19 +195,21 @@ const GroupQuestionModal = (props) => {
         setGroup(_data.group)
         setGroupLabel(_data.label)
         setTranscript(_data.transcript)
+        setPassage(_data.passage)
         setCurrentGroupQuestion(_data)
 
 
     }, [data, firstLoading]);
+
     return (
         <Card
-            title={`Save ${JSON.stringify(data?.data.audio)}`}
+            title={``}
         >
             <Space>
                 <Button
                     onClick={onFinish}
                     type="primary" >
-                    Add Question
+                    Save
                 </Button >
             </Space>
             <Spin spinning={isloading || firstLoading && questionIdQuery}>
@@ -321,24 +324,11 @@ const GroupQuestionModal = (props) => {
                                 disabled: type <= 5,
                                 children: (
                                     <Card title="Passage">
-                                        <PassageTable
-                                            data={currentGroupQuestion?.passages || []}
-                                            handleInsert={(_) => {
-                                                setCurrentPassage(defaultQs)
-                                                setPassageModalVisible(true)
+                                        <MyEditor
+                                            content={passage}
+                                            onChange={(event, editor) => {
+                                                setPassage(editor.getData());
                                             }}
-                                            handleUpdate={(data) => {
-                                                console.log(data);
-                                                setCurrentPassage(data)
-                                                setPassageModalVisible(true)
-                                            }}
-                                            handleDelete={handleDeletePassage}
-                                        />
-                                        <PassageModal
-                                            data={currentPassage}
-                                            visible={passageModalVisible}
-                                            onComplete={handleUpdatePassage}
-                                            handleCancel={() => { setPassageModalVisible(false) }}
                                         />
                                     </Card>
                                 ),

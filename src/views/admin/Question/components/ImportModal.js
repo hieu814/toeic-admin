@@ -53,6 +53,7 @@ const ImportModal = (props) => {
         setErrorMsg("")
         onComplete()
         setIsloading(false)
+        setFileList([])
     };
     function csvToJson(csvFile) {
         Papa.parse(csvFile, {
@@ -95,23 +96,39 @@ const ImportModal = (props) => {
                 arr.forEach((val) => {
                     if (val?.question) {
                         var qs = parseQuestion({
-                            questions: val?.question,
-                            answers: val?.answers,
-                            type: val?.type,
-                            transcript: val?.transcript
+                            questions: val?.question ?? "",
+                            answers: val?.answers ?? "",
+                            type: val?.type ?? 0,
+                            transcript: val?.transcript ?? ""
                         })
                         if (examType <= 1 || (examType - 1) == (val?.type))
                             _question.push(qs)
                     }
 
                 })
+                // format question
+                var _questioFormatted = []
+                _question.forEach((quesion) => {
+                    if (quesion.type == 2 || quesion.type == 5) {
+                        (quesion.questions ?? []).forEach((val) => {
+
+                            _questioFormatted.push({ ...quesion, questions: [{ ...val }], group: `${val.number}` })
+                            console.log("find padt d", _questioFormatted[_questioFormatted.length - 1]);
+                        })
+
+                    } else {
+                        _questioFormatted.push({ ...quesion })
+                    }
+
+                })
+                console.log(_questioFormatted);
                 bulkInsertQuestion({
-                    data: _question
+                    data: _questioFormatted
                 })
                     .unwrap()
                     .then((respond) => {
                         message.success(respond.message)
-                        console.log(respond?.data || []);
+                        // console.log(respond?.data || []);
                         updateExam({
                             id: examId,
                             $addToSet: { questions: respond?.data || [] }

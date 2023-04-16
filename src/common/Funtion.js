@@ -152,12 +152,14 @@ function convertToJson(lines) {
 }
 function parseQuestion(data) {
     const lines = data.questions.split('\n');
-    const answers = data.answers.split('\n');
+    const answers = (data.answers ?? "").split('\n');
     var questions = [];
     var group = ""
     let currentQuestion = null;
 
     for (const line of lines) {
+        if (line.trim() === '')
+            continue
         if (/^\d+\.\s/.test(line)) {
             // This line starts a new question
             const number = parseInt(line.match(/^\d+/)[0]);
@@ -186,7 +188,6 @@ function parseQuestion(data) {
     } else {
         group = questions.length < 2 ? `${questions[0].number}` : `${questions[0].number}-${questions[questions.length - 1].number}`
     }
-    console.log({ type: data?.type || 0, group, questions, transcript: data.transcript || "" });
     return { type: data?.type || 0, group, questions, transcript: data.transcript || "" };
 }
 function parseExcelFile(file) {

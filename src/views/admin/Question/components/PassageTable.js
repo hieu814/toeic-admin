@@ -66,7 +66,7 @@ export default function PassageTable(props) {
     return <div>
         <Table columns={columns} dataSource={data} pagination={false} rowKey="number" />
         <Button type="dashed" style={{ marginTop: 6 }} onClick={handleInsert} block icon={<PlusOutlined />}>
-            Add Question
+            Add Passage
         </Button>
     </div>;
 
