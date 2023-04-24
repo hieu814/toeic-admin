@@ -29,8 +29,8 @@ const PassageModal = ({ data, visible, onComplete, handleCancel }) => {
         setContent("");
         setIsloading(false)
     };
-    const handleEditorChange = (event, editor) => {
-        setContent(editor.getData());
+    const handleEditorChange = (data) => {
+        setContent(data);
     };
     useEffect(() => {
         setContent(data?.content || "")

@@ -326,8 +326,8 @@ const GroupQuestionModal = (props) => {
                                     <Card title="Passage">
                                         <MyEditor
                                             content={passage}
-                                            onChange={(event, editor) => {
-                                                setPassage(editor.getData());
+                                            onChange={(data) => {
+                                                setPassage(data);
                                             }}
                                         />
                                     </Card>
@@ -340,8 +340,8 @@ const GroupQuestionModal = (props) => {
                                     <Card title="Transcript">
                                         <MyEditor
                                             content={transcript}
-                                            onChange={(event, editor) => {
-                                                setTranscript(editor.getData());
+                                            onChange={(data) => {
+                                                setTranscript(data);
                                             }}
                                         />
                                     </Card>

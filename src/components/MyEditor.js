@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import Editor from 'ckeditor5-custom-build';
 import PropTypes from "prop-types";
 
 export default function MyEditor({ onChange, ...props }) {
@@ -42,18 +42,25 @@ export default function MyEditor({ onChange, ...props }) {
             return uploadAdapter(loader);
         };
     }
+    function handleChange(event, editor) {
+        const data = editor.getData();
+        console.log({ event, editor, data });
+        onChange(data)
+    }
     return (
         <div >
             <CKEditor
                 config={{
                     // plugins: [ImageResize] ,
                     extraPlugins: [uploadPlugin],
-                    toolbar: ['heading', '|', 'bold', 'italic', 'blockQuote', 'link', 'numberedList', 'bulletedList', 'imageUpload', 'insertTable',
-                        'tableColumn', 'tableRow', 'mergeTableCells', 'mediaEmbed', '|', 'undo', 'redo']
+                    fontSize: {
+                        options: [8, 9, 10, 12, 14, 16, 18, 20, 24, 28, 32, 36, 48],
+                        supportAllValues: true
+                    }
                 }}
-                editor={ClassicEditor}
+                editor={Editor}
                 data={props.content}
-                onChange={onChange}
+                onChange={handleChange}
                 {...props}
             />
         </div>

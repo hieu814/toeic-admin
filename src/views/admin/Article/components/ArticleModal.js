@@ -69,8 +69,8 @@ const ArticleModal = (props) => {
         }
 
     };
-    const handleEditorChange = (event, editor) => {
-        setContent(editor.getData());
+    const handleEditorChange = (html) => {
+        setContent(html);
     };
     function handleCalcel() {
         form.resetFields();
