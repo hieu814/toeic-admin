@@ -19,7 +19,7 @@ import { articleApi } from 'src/api/article';
 import { questionApi } from 'src/api/question';
 import { wordApi } from 'src/api/word';
 import { wordCategoryApi } from 'src/api/word_category';
-
+import { wordTopicApi } from 'src/api/word_topic';
 const persistConfig = {
   key: 'root',
   storage,
@@ -35,6 +35,7 @@ const rootReducer = {
   [articleApi.reducerPath]: articleApi.reducer,
   [wordApi.reducerPath]: wordApi.reducer,
   [wordCategoryApi.reducerPath]: wordCategoryApi.reducer,
+  [wordTopicApi.reducerPath]: wordTopicApi.reducer,
   global: persistReducer(persistConfig, global),
 }
 
@@ -49,9 +50,10 @@ const store = configureStore({
       }
     ).concat(authApi.middleware, usersApi.middleware,
       examCategoryApi.middleware, examApi.middleware,
-      articleCategoryApi.middleware, questionApi.middleware, 
-      articleApi.middleware,wordApi.middleware,
-      wordCategoryApi.middleware),
+      articleCategoryApi.middleware, questionApi.middleware,
+      articleApi.middleware, wordApi.middleware,
+      wordCategoryApi.middleware,
+      wordTopicApi.middleware),
 })
 
 const persistor = persistStore(store)

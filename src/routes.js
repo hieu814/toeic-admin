@@ -10,6 +10,7 @@ const Question = React.lazy(() => import('./views/admin/Question/components/Grou
 const Article = React.lazy(() => import('./views/admin/Article/Article'))
 const WordCategory = React.lazy(() => import('./views/admin/Word_category/WordCategory'))
 const Word = React.lazy(() => import('./views/admin/Word/Word'))
+const WordTopic = React.lazy(() => import('./views/admin/Word_topic/WordTopic'))
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
@@ -21,6 +22,7 @@ const routes = [
   { path: '/article/category', name: 'Article Category', element: ArticleCategory },
   { path: '/article', name: 'Article', element: Article },
   { path: '/word/category', name: 'Category', element: WordCategory },
+  { path: '/word/topic', name: 'Category', element: WordTopic },
   { path: '/word', name: 'Word', element: Word },
 ]
 

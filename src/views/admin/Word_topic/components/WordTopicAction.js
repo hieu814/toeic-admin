@@ -40,12 +40,12 @@ const WordCategoryAction = ({ onSelect }) => {
             icon: <DeleteOutlined />,
         },
 
-        // {
-        //     label: 'Edit Word',
-        //     key: 3,
-        //     icon: <CommentOutlined />,
+        {
+            label: 'Edit Word',
+            key: 3,
+            icon: <CommentOutlined />,
 
-        // },
+        },
         // {
         //     label: 'Import',
         //     key: 4,

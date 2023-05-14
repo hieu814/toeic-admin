@@ -4,7 +4,7 @@ import { useDeleteWordMutation, useFindAllWordMutation, useBulkInsertWordMutatio
 import MyTable from "./components/WordTable";
 import { buidQuery, getPaginator } from "src/common/Funtion";
 import WordModal from "./components/WordModal";
-import { useFindAllWordCategoriesMutation, useGetWordCategoryQuery, useUpdateWordCategoryMutation } from "src/api/word_category";
+import { useGetWordTopicQuery, useUpdateWordTopicMutation } from "src/api/word_topic";
 import { useLocation, useNavigate } from "react-router-dom";
 import ImportModal from "./components/ImportModal";
 // import ImportModal from "./components/ImportModal";
@@ -21,11 +21,11 @@ const WordManagementPage = () => {
     const [deleteMany] = useDeleteManyWordMutation();
     const [insertOrUpdate] = useBulkInsertWordMutation();
     const [deleteWord] = useDeleteWordMutation();
-    const [updateCategory] = useUpdateWordCategoryMutation();
+    const [updateCategory] = useUpdateWordTopicMutation();
     const [currentData, setCurrentData] = useState(null)
     const [isModalVisible, setIsModalVisible] = useState(false)
     const [importModalVisible, setImportModalVisible] = useState(false)
-    const { data: currentCategory, refetch } = useGetWordCategoryQuery(category || "");
+    const { data: currentCategory, refetch } = useGetWordTopicQuery(category || "");
     const [isInsert, setIsInsert] = useState(false)
     const [type, setType] = useState("");
     const [search, setSearch] = useState("");

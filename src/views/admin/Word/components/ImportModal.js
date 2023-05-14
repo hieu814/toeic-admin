@@ -6,9 +6,8 @@ import PropTypes from 'prop-types';
 
 import { UploadOutlined } from '@ant-design/icons';
 import { parseExcelFile } from 'src/common/Funtion';
-import { useGetExamQuery, useUpdateExamMutation } from 'src/api/exam';
 import { useBulkInsertWordMutation } from 'src/api/word';
-import { useUpdateWordCategoryMutation } from 'src/api/word_category';
+import { useUpdateWordTopicMutation } from 'src/api/word_topic';
 const { Option } = Select;
 
 const ImportModal = (props) => {
@@ -17,7 +16,7 @@ const ImportModal = (props) => {
     const [fileList, setFileList] = useState([]);
     const [isloading, setIsloading] = useState(false)
     const [insertOrUpdate] = useBulkInsertWordMutation();
-    const [updateCategory] = useUpdateWordCategoryMutation();
+    const [updateCategory] = useUpdateWordTopicMutation();
     const onFinish = async () => {
         setIsloading(true)
         await importData()
@@ -42,8 +41,9 @@ const ImportModal = (props) => {
                                 $addToSet: { words: { $each: _ids } }
                                 // $addToSet: { words: _ids }
                             })
-                                .unwrap()
 
+                                .unwrap()
+                            console.log({ res })
                         }
 
                         data = []
