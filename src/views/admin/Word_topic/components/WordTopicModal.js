@@ -33,7 +33,6 @@ const WordTopicModal = (props) => {
     const [updateWordTopic, { error: updateError, isLoading: updateLoading = false }] = useUpdateWordTopicMutation();
     const onFinish = async (values) => {
         values = removeUndefined(values)
-        console.log(values);
         if (isInsert) {
             addWordTopic(values)
                 .then((respond) => {
