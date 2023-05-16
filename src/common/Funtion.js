@@ -1,6 +1,6 @@
 import Papa from 'papaparse';
 import * as XLSX from 'xlsx';
-
+const objectIdRegex = /^[0-9a-fA-F]{24}$/;
 function buidQuery(options) {
     options = removeUndefined(options)
     var query = {
@@ -207,6 +207,9 @@ function parseExcelFile(file) {
         reader.readAsArrayBuffer(file);
     });
 }
+const isValidObjectId = (id) => {
+    return objectIdRegex.test(id);
+};
 function checkUrl(url = "") {
     if (!url) return ""
     return url.includes("http") ? url : `${process.env.REACT_APP_BACKEND_URL}${url}`
@@ -225,5 +228,6 @@ export {
     parseExcelFile,
     downloadCSV,
     convertKeysToLowercase,
-    checkUrl
+    checkUrl,
+    isValidObjectId
 }

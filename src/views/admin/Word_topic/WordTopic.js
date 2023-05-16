@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Space, Select, Input, Button, Card, message } from "antd";
-import { useDeleteWordTopicMutation, useFindAllWordTopicMutation } from "src/api/word_topic";
+import { useDeleteManyWordTopicMutation, useDeleteWordTopicMutation, useFindAllWordTopicMutation } from "src/api/word_topic";
 import MyTable from "./components/WordTopicTable";
 import { buidQuery, getPaginator } from "src/common/Funtion";
 import WordTopicModal from "./components/WordTopicModal";
 import { useFindAllWordCategoriesMutation } from "src/api/word_category";
 import { useNavigate } from "react-router-dom";
+import ImportModal from "./components/ImportModal";
 // import ImportModal from "./components/ImportModal";
 const { Option } = Select;
 
@@ -18,6 +19,7 @@ const WordTopicManagementPage = () => {
     const [findAllWordTopics, { data, isLoading }] = useFindAllWordTopicMutation();
     const [deleteWordTopic] = useDeleteWordTopicMutation();
     const [findAllWordTopicCategorys, { data: categotyData }] = useFindAllWordCategoriesMutation();
+    const [deleteMany] = useDeleteManyWordTopicMutation();
     const [currentData, setCurrentData] = useState(null)
     const [isModalVisible, setIsModalVisible] = useState(false)
     const [importModalVisible, setImportModalVisible] = useState(false)
@@ -57,6 +59,9 @@ const WordTopicManagementPage = () => {
         }
 
     }
+    const importWord = () => {
+        setImportModalVisible(true)
+    };
     const handleTypeChange = (value) => {
         setType(value);
     };
@@ -109,6 +114,20 @@ const WordTopicManagementPage = () => {
             setImportModalVisible(true)
         }
     }
+    function handleDeleteMany(ids) {
+        deleteMany({ ids })
+            .unwrap()
+            .then((respond) => {
+                console.log(respond);
+                message.success(respond.message)
+                loadData()
+            })
+            .catch((err) => {
+                console.log(err);
+
+            });
+
+    }
     return (
 
         <Card title={`WordTopic Management}`}>
@@ -135,6 +154,9 @@ const WordTopicManagementPage = () => {
                 <Button type="primary" onClick={handleInsert}>
                     Add
                 </Button>
+                <Button type="primary" onClick={importWord}>
+                    Import
+                </Button>
             </Space>
             <MyTable
                 isloading={isLoading}
@@ -143,7 +165,7 @@ const WordTopicManagementPage = () => {
                 handleAction={handleAction}
                 handleChangeRowPerPage={setRowsPerPage}
                 handleChangePage={setPage}
-
+                handleDeleteMany={handleDeleteMany}
             />
             <WordTopicModal
                 visible={isModalVisible}
@@ -153,7 +175,15 @@ const WordTopicManagementPage = () => {
                 category={(categotyData?.data?.data || [])}
 
             />
-
+            <ImportModal
+                visible={importModalVisible}
+                categoryID={type}
+                onCancel={() => { setImportModalVisible(false) }}
+                onComplete={() => {
+                    setImportModalVisible(false)
+                    // refetch()
+                }}
+            />
         </Card>
 
     );
