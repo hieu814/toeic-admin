@@ -88,7 +88,7 @@ const ExamCategoryManagementPage = () => {
     }
     return (
 
-        <Card title={`Exam Category Management `}>
+        <Card title={`Exam Category`}>
 
             <Space>
                 <Input.Search

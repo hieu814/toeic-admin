@@ -137,7 +137,7 @@ const ExamManagementPage = () => {
 
   return (
 
-    <Card title={`Question Management`}>
+    <Card title={`Question`}>
       <Space>
         <Select
           defaultValue={""}

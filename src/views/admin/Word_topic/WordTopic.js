@@ -130,7 +130,7 @@ const WordTopicManagementPage = () => {
     }
     return (
 
-        <Card title={`WordTopic Management}`}>
+        <Card title={`Word Topic}`}>
             <Space>
                 <Select
                     defaultValue={""}

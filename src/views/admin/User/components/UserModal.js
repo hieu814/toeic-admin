@@ -100,12 +100,10 @@ const UserModal = (props) => {
                     <Form.Item
                         name="username"
                         label="Username"
-                        tooltip="To login"
                         rules={[
                             {
                                 required: true,
-                                message: 'Please input username!',
-                                whitespace: true,
+                                // whitespace: true,
                             },
                         ]}
                     >
@@ -115,10 +113,6 @@ const UserModal = (props) => {
                         name="email"
                         label="E-mail"
                         rules={[
-                            {
-                                type: 'email',
-                                message: 'The input is not valid E-mail!',
-                            },
                             {
                                 required: true,
                                 message: 'Please input your E-mail!',

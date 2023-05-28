@@ -89,7 +89,7 @@ const UserManagementPage = () => {
     }
     return (
 
-        <Card title={`User Management `}>
+        <Card title={`User`}>
 
             <Space>
                 <Select

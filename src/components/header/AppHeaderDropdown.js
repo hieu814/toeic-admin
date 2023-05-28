@@ -43,11 +43,11 @@ const AppHeaderDropdown = () => {
   return (
     <CDropdown variant="nav-item">
       <CDropdownToggle placement="bottom-end" className="py-0" caret={false}>
-        <CAvatar src={avatar8} size="md" />
+      <CIcon icon={cilUser}  />,
       </CDropdownToggle>
       <CDropdownMenu className="pt-0" placement="bottom-end">
-        <CDropdownHeader className="bg-light fw-semibold py-2">Account</CDropdownHeader>
-        
+        {/* <CDropdownHeader className="bg-light fw-semibold py-2">Account</CDropdownHeader>
+
         <CDropdownHeader className="bg-light fw-semibold py-2">Settings</CDropdownHeader>
         <CDropdownItem href="#">
           <CIcon icon={cilUser} className="me-2" />
@@ -57,12 +57,11 @@ const AppHeaderDropdown = () => {
           <CIcon icon={cilSettings} className="me-2" />
           Settings
         </CDropdownItem>
-        <CDropdownDivider />
-        <CDropdownItem >
-          <CIcon icon={cilLockLocked} className="me-2" onClick={() => {
-            logout()
-          }} />
-          Lock Account
+        <CDropdownDivider /> */}
+        <CDropdownItem onClick={() => {
+          logout()
+        }}>
+          Log out
         </CDropdownItem>
       </CDropdownMenu>
     </CDropdown>

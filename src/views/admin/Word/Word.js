@@ -144,7 +144,7 @@ const WordManagementPage = () => {
     }
     return (
 
-        <Card title={`Word Management ${currentCategory?.data.name || ""}`}>
+        <Card title={`Word`}>
             <Space>
                 <Input.Search
                     placeholder="Search by name"

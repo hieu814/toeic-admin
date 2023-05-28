@@ -58,7 +58,7 @@ const CNavbars = () => {
                     <CDropdownItem>FA</CDropdownItem>
                   </CDropdownMenu>
                 </CDropdown>
-                <CDropdown inNav>
+                <CDropdown inNav> 
                   <CDropdownToggle color="primary">User</CDropdownToggle>
                   <CDropdownMenu>
                     <CDropdownItem>Account</CDropdownItem>
@@ -81,7 +81,7 @@ const CNavbars = () => {
                 className="d-inline-block align-top"
                 alt="CoreuiVue"
               />
-              CoreUI React
+              Admin
             </CNavbarBrand>
           </CNavbar>
         </CCardBody>

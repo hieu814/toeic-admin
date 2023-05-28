@@ -89,7 +89,7 @@ const ArticleManagementPage = () => {
     }
     return (
 
-        <Card title={`Article Management`}>
+        <Card title={`Lession`}>
             <Space>
                 <Select
                     defaultValue={""}

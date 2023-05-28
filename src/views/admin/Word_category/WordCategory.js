@@ -96,7 +96,7 @@ const WordCategoryManagementPage = () => {
     }
     return (
 
-        <Card title={`Word Category Management `}>
+        <Card title={`Word Category `}>
 
             <Space>
                 <Input.Search
