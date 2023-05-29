@@ -98,8 +98,8 @@ const UserModal = (props) => {
                     scrollToFirstError
                 >
                     <Form.Item
-                        name="username"
-                        label="Username"
+                        name="name"
+                        label="Name"
                         rules={[
                             {
                                 required: true,
@@ -135,20 +135,7 @@ const UserModal = (props) => {
                     >
                         <Input.Password />
                     </Form.Item>
-                    <Form.Item
-                        name="nickname"
-                        label="Nickname"
-                        tooltip="What do you want others to call you?"
-                        rules={[
-                            {
-                                required: isInsert,
-                                message: 'Please input your nickname!',
-                                whitespace: true,
-                            },
-                        ]}
-                    >
-                        <Input />
-                    </Form.Item>
+
                     <Form.Item
                         name="phone"
                         label="Phone Number"
@@ -206,9 +193,10 @@ const UserModal = (props) => {
                             },
                         ]}
                     >
-                        <Select placeholder="select your gender" defaultValue={1}>
+                        <Select placeholder="select your gender" defaultValue={3}>
                             <Option value={2}>Admin</Option>
                             <Option value={1}>User</Option>
+                            <Option value={3}>Customer</Option>
                         </Select>
                     </Form.Item>
                     <Form.Item name="isActive" label="Active" valuePropName="checked">

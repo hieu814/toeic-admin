@@ -21,20 +21,16 @@ export default function MyTable(props) {
         data,
     } = props;
     const columns = [
-        {
-            name: 'ID',
-            selector: (row, i) => row.id,
-            sortable: true,
-        },
+        // {
+        //     name: 'ID',
+        //     selector: (row, i) => row.id,
+        //     sortable: true,
+        // },
         {
             name: 'Name',
             selector: (row, i) => row.name,
             sortable: true,
-        },
-        {
-            name: 'Description',
-            selector: (row, i) => row.description,
-            sortable: true,
+            wrap: true,
         },
         {
             name: 'Image',
@@ -48,11 +44,12 @@ export default function MyTable(props) {
             ),
         },
         {
-            name: 'Type',
-            cell: (row) => (
-                <Tag color={row?.type === 1 ? "red" : "blue"}>{row?.type === 1 ? "Lession" : "Article"}</Tag>
-            ),
+            name: 'Description',
+            selector: (row, i) => row.description,
+            // sortable: true,
+            wrap: true,
         },
+
         {
             name: 'Actions',
             cell: (record) => (

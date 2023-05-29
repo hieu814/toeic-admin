@@ -7,7 +7,30 @@ import PropTypes from "prop-types";
 import ExamAction from './ExamAction';
 
 
-
+function getType(type) {
+    switch (type) {
+        case 0:
+            return "Full Test";
+        case 1:
+            return "Mini Test";
+        case 2:
+            return "Part 1";
+        case 3:
+            return "Part 2";
+        case 4:
+            return "Part 3";
+        case 5:
+            return "Part 4";
+        case 6:
+            return "Part 5";
+        case 7:
+            return "Part 6";
+        case 8:
+            return "Part 7";
+        default:
+            return "";
+    }
+}
 export default function MyTable(props) {
     const { handleAction,
         handleChangePage,
@@ -27,20 +50,28 @@ export default function MyTable(props) {
             selector: (row, i) => row.name,
             sortable: true,
         },
+        // {
+        //     name: 'Image',
+        //     cell: (row) => (
+        //         <img src={`${process.env.REACT_APP_BACKEND_URL}${row?.image}`}
+        //             onError={(e) => {
+        //                 e.target.src = "https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg";
+        //             }}
+        //             style={{
+        //                 width: 80,
+        //                 height: 80,
+        //                 margin: '10px',
+        //                 borderRadius: '10%'
+        //             }}
+        //         />
+        //     ),
+        // },
         {
-            name: 'Image',
+            name: 'Type',
             cell: (row) => (
-                <img src={`${process.env.REACT_APP_BACKEND_URL}${row?.image}`}
-                    onError={(e) => {
-                        e.target.src = "https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg";
-                    }}
-                    style={{
-                        width: 80,
-                        height: 80,
-                        margin: '10px',
-                        borderRadius: '10%'
-                    }}
-                />
+                <Tag color={"blue"}>{
+                    getType(row?.type)
+                }</Tag>
             ),
         },
         {

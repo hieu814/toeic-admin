@@ -88,7 +88,7 @@ const ArticleCategoryManagementPage = () => {
     }
     return (
 
-        <Card title={`Article Category`}>
+        <Card title={`Lession Category`}>
 
             <Space>
                 <Select

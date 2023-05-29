@@ -25,8 +25,8 @@ export default function MyTable(props) {
             sortable: true,
         },
         {
-            name: 'Username',
-            selector: 'username',
+            name: 'Name',
+            selector: 'name',
             sortable: true,
         },
         {
@@ -34,12 +34,15 @@ export default function MyTable(props) {
             selector: 'email',
             sortable: true,
         },
+
         {
-            title: "Role",
-            dataIndex: "userType",
-            key: "userType",
-            render: (role) => (
-                <Tag color={role === 1 ? "red" : "blue"}>{role}</Tag>
+            name: 'Role',
+            cell: (record) => (
+                <Tag color={record.userType === 2 ? "red" : "blue"}>{record.userType
+                    === 2 ? "Admin" : record.userType
+                        === 1 ? "Moderator" : "Customer"
+                }</Tag>
+
             ),
         },
         {

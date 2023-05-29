@@ -1,7 +1,7 @@
 
 
 import React, { useEffect, useState } from 'react';
-import { Modal, Button, message, Upload, Select, Form, } from 'antd';
+import { Modal, Button, message, Upload, Select, Form, Input } from 'antd';
 import PropTypes from 'prop-types';
 
 import { useBulkInsertQuestionsMutation, useFindAllQuestionsMutation, useBulkUpdateQuestionsMutation, useUpdateQuestionMutation } from 'src/api/question';
@@ -16,6 +16,7 @@ const { Option } = Select;
 const ImportModal = (props) => {
     const { isInsert, visible, onCancel, data, onComplete, examId } = props
     const [errorMsg, setErrorMsg] = useState("");
+    const [answersData, setAnswersData] = useState("");
     const [type, setType] = useState(1);
     const [fileList, setFileList] = useState([]);
     const [isloading, setIsloading] = useState(false)
@@ -29,7 +30,7 @@ const ImportModal = (props) => {
         console.log("onFinish ", type);
         setIsloading(true)
         try {
-            if (fileList.length < 1) return
+            if (type !== 5 && fileList.length < 1) return
             if (type === 4) {
                 await importAudio()
             } else if (type == 3) {
@@ -44,12 +45,16 @@ const ImportModal = (props) => {
                 // })
                 csvToJson(fileList[0])
 
+            } else if (type === 5) {
+                await importAnswers()
+                return
             }
 
 
         } catch (error) {
             console.error(error);
         }
+        setAnswersData("")
         setErrorMsg("")
         onComplete()
         setIsloading(false)
@@ -90,7 +95,7 @@ const ImportModal = (props) => {
     function importQuestion() {
         return new Promise((resolve, reject) => {
             var examType = exam?.data.type ?? 0
-            console.log({ examType });
+            // console.log({ examType });
             parseExcelFile(fileList[0]).then((arr) => {
                 var _question = []
                 arr.forEach((val) => {
@@ -113,10 +118,47 @@ const ImportModal = (props) => {
                         (quesion.questions ?? []).forEach((val) => {
 
                             _questioFormatted.push({ ...quesion, questions: [{ ...val }], group: `${val.number}` })
-                            console.log("find padt d", _questioFormatted[_questioFormatted.length - 1]);
+                            // console.log("find padt d", _questioFormatted[_questioFormatted.length - 1]);
                         })
 
-                    } else {
+                    } else if (quesion.type == 3 || quesion.type == 4) {
+
+                        if (quesion.questions.length > 3) {
+                            var questionArr = [...quesion.questions]
+                            questionArr.sort((a, b) => a.number - b.number);
+                            var array2 = [];
+                            let currentArrayQss = [];
+
+                            questionArr.forEach((item) => {
+                                currentArrayQss.push({ ...item });
+
+                                if (currentArrayQss.length === 3) {
+                                    array2.push({
+                                        ...quesion,
+                                        questions: currentArrayQss,
+                                        group: currentArrayQss.length < 2 ? `${currentArrayQss[0].number}` : `${currentArrayQss[0].number}-${currentArrayQss[currentArrayQss.length - 1].number}`
+
+                                    })
+                                    currentArrayQss = [];
+                                }
+                            });
+
+                            if (currentArrayQss.length > 0) {
+                                array2.push({
+                                    ...quesion,
+                                    questions: currentArrayQss,
+                                    group: currentArrayQss.length < 2 ? `${currentArrayQss[0].number}` : `${currentArrayQss[0].number}-${currentArrayQss[currentArrayQss.length - 1].number}`
+
+                                })
+                            }
+
+                            _questioFormatted = _questioFormatted.concat(array2)
+                            console.log({ array2, _questioFormatted });
+                        } else {
+                            _questioFormatted.push({ ...quesion })
+                        }
+                    }
+                    else {
                         _questioFormatted.push({ ...quesion })
                     }
 
@@ -226,7 +268,36 @@ const ImportModal = (props) => {
             }
         });
     }
+    function importAnswers() {
+        return new Promise((resolve, reject) => {
+            try {
 
+                const lines = answersData.trimEnd().split("\n");
+                var resultMap = new Map();
+                for (const line of lines) {
+                    const [key, value] = line.split(" ");
+                    const parsedKey = parseInt(key.trim());
+                    resultMap.set(parsedKey, value.trim());
+                }
+                getQuestions().then((datas) => {
+                    var _quesionsTemp = Array.from((datas), (qs) => {
+                        var _quesions = Array.from((qs.questions), (quesionValue) => {
+                            return { ...quesionValue, correct_answer: resultMap.get(quesionValue.number) ?? "" }
+                        })
+                        return { ...qs, questions: _quesions }
+                    })
+
+                    updateManyQuestion(_quesionsTemp).then(datas => {
+                        resolve("ok")
+                    }).catch(err => {
+                        reject(err); // Reject if updateManyQuestion() fails
+                    })
+                })
+            } catch (error) {
+                reject(error)
+            }
+        });
+    }
     function handleCalcel() {
         setIsloading(false)
         setErrorMsg("")
@@ -264,9 +335,10 @@ const ImportModal = (props) => {
                     <Option key={4} value={2}>Question</Option>
                     <Option key={2} value={3}>Image</Option>
                     <Option key={3} value={4}>Audio</Option>
+                    <Option key={5} value={5}>Answers</Option>
                 </Select>
             </Form.Item>
-            <Form.Item label="File">
+            {type !== 5 && <Form.Item label="File">
                 <Upload
                     supportServerRender
                     onRemove={(file) => {
@@ -284,7 +356,21 @@ const ImportModal = (props) => {
                     fileList={fileList}                >
                     <Button icon={<UploadOutlined />}>Select File</Button>
                 </Upload>
-            </Form.Item>
+            </Form.Item>}
+            {type === 5 && <Input.TextArea
+                placeholder='1 A
+                6 D
+                2 A
+                3 C
+                4 B
+                5 B
+                ...'
+                onChange={(e) => {
+                    setAnswersData(e.target.value);
+                }}
+                autoSize={{ minRows: 2, maxRows: 600 }} // Set a minimum and maximum number of rows
+                style={{ height: "auto", minHeight: "300px" }} // Set the height to auto and provide a minimum height
+            />}
 
 
         </Modal>

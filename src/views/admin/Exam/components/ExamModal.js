@@ -157,7 +157,7 @@ const ExamModal = (props) => {
                             )};
                         </Select>
                     </Form.Item>
-                    <Form.Item
+                    {/* <Form.Item
                         name="image"
                         label="Image"
                         rules={[
@@ -168,7 +168,7 @@ const ExamModal = (props) => {
                         ]}
                     >
                         <CustomUpload />
-                    </Form.Item>
+                    </Form.Item> */}
 
                     <Form.Item name="isActive" label="Active" valuePropName="checked">
                         <Switch />
