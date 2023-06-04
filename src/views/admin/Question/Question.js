@@ -9,7 +9,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import ImportModal from "./components/ImportModal";
 const { Option } = Select;
 
-
 ///exam/quesions?examID=id
 const ExamManagementPage = () => {
   const query = new URLSearchParams(useLocation().search);

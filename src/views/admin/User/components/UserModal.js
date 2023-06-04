@@ -193,10 +193,10 @@ const UserModal = (props) => {
                             },
                         ]}
                     >
-                        <Select placeholder="select your gender" defaultValue={3}>
+                        <Select placeholder="select your gender" initialValues={3}>
                             <Option value={2}>Admin</Option>
                             <Option value={1}>User</Option>
-                            <Option value={3}>Customer</Option>
+                            <Option value={3}>Moderator</Option>
                         </Select>
                     </Form.Item>
                     <Form.Item name="isActive" label="Active" valuePropName="checked">

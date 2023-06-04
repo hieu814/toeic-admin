@@ -66,7 +66,7 @@ const UserManagementPage = () => {
                 loadData()
             })
             .catch((err) => {
-                console.log(err);
+                message.error(err.data.message ?? "Something Wrong")
 
             });
     }
@@ -99,8 +99,8 @@ const UserManagementPage = () => {
                 >
                     <Option value={null}>All User</Option>
                     <Option value={2}>Admin</Option>
-                    <Option value={1}>User</Option>
-                    <Option value={3}>Customer</Option>
+                    <Option value={1}>Moderator</Option>
+                    <Option value={3}>User</Option>
                 </Select>
                 <Input.Search
                     placeholder="Search by username or email"

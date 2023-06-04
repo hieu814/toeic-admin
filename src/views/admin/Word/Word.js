@@ -158,9 +158,9 @@ const WordManagementPage = () => {
                 <Button type="primary" onClick={handleInsert}>
                     Add
                 </Button>
-                <Button type="primary" onClick={importWord}>
+                {/* <Button type="primary" onClick={importWord}>
                     Import
-                </Button>
+                </Button> */}
             </Space>
             <MyTable
                 isloading={isLoading}

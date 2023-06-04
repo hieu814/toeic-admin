@@ -40,7 +40,7 @@ export default function MyTable(props) {
             cell: (record) => (
                 <Tag color={record.userType === 2 ? "red" : "blue"}>{record.userType
                     === 2 ? "Admin" : record.userType
-                        === 1 ? "Moderator" : "Customer"
+                        === 1 ? "Moderator" : "User"
                 }</Tag>
 
             ),
@@ -53,11 +53,11 @@ export default function MyTable(props) {
                     <>
                         <Popconfirm
                             title="Are you sure you want to delete this record?"
-                            // onConfirm={() => handleUpdate(record)}
+                            onConfirm={() => handleDelete(record)}
                             okText="Yes"
                             cancelText="No"
                         >
-                            <DeleteOutlined style={{ color: "#FF0000" }} onClick={() => handleDelete(record)} />
+                            <DeleteOutlined style={{ color: "#FF0000" }} />
                         </Popconfirm>
 
                         <EditOutlined onClick={() => handleUpdate(record)} />

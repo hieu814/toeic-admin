@@ -60,11 +60,11 @@ export default function MyTable(props) {
             selector: (row, i) => row.pronounce,
             sortable: true,
         },
-        {
-            name: 'Definition',
-            selector: (row, i) => row.definition,
-            sortable: true,
-        },
+        // {
+        //     name: 'Definition',
+        //     selector: (row, i) => row.definition,
+        //     sortable: true,
+        // },
 
 
         {
