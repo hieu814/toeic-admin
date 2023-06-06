@@ -8,6 +8,7 @@ import {
     DeleteOutlined, EditOutlined,
 
 } from '@ant-design/icons';
+import { checkUrl } from 'src/common/Funtion';
 export default function MyTable(props) {
     const { handleDelete,
         handleUpdate,
@@ -21,7 +22,7 @@ export default function MyTable(props) {
     const [selectedRows, setSelectedRows] = useState([]);
     useEffect(() => {
         setSelectedRows([])
-      }, [data]);
+    }, [data]);
     function deleteMany() {
         let ids = Array.from((selectedRows || []), (field) => {
             return field.id
@@ -42,7 +43,7 @@ export default function MyTable(props) {
             wrap: true,
             //maxWidth: "150px",
             cell: (row) => (
-                <img src={`${process.env.REACT_APP_BACKEND_URL}${row?.image}`}
+                <img src={`${checkUrl(row?.image)}`}
                     onError={(e) => {
                         e.target.src = "https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg";
                     }}

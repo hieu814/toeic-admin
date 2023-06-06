@@ -13,7 +13,7 @@ const Word = React.lazy(() => import('./views/admin/Word/Word'))
 const WordTopic = React.lazy(() => import('./views/admin/Word_topic/WordTopic'))
 const routes = [
   { path: '/', exact: true, name: 'Home' },
-  // { path: '/dashboard', name: 'Dashboard', element: Dashboard },
+  { path: '/dashboard', name: 'User', element: User },
   { path: '/user', name: 'User', element: User },
   { path: '/exam', name: 'Exam', element: Exam },
   { path: '/exam/quesions', name: 'Questions', element: Questions },

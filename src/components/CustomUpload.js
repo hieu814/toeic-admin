@@ -61,7 +61,7 @@ const CustomUpload = (props) => {
                 listType="picture-card"
                 className="avatar-uploader"
                 showUploadList={false}
-                action="http://localhost:5000/admin/upload"
+                action={`${process.env.REACT_APP_BACKEND_URL}/admin/upload`}
                 beforeUpload={beforeUpload}
                 onChange={handleChange}
             >
