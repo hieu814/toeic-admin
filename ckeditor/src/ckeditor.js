@@ -3,6 +3,7 @@
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor.js';
+import Alignment from '@ckeditor/ckeditor5-alignment/src/alignment.js';
 import Autoformat from '@ckeditor/ckeditor5-autoformat/src/autoformat.js';
 import BlockQuote from '@ckeditor/ckeditor5-block-quote/src/blockquote.js';
 import Bold from '@ckeditor/ckeditor5-basic-styles/src/bold.js';
@@ -22,10 +23,15 @@ import Indent from '@ckeditor/ckeditor5-indent/src/indent.js';
 import Italic from '@ckeditor/ckeditor5-basic-styles/src/italic.js';
 import Link from '@ckeditor/ckeditor5-link/src/link.js';
 import List from '@ckeditor/ckeditor5-list/src/list.js';
+import Markdown from '@ckeditor/ckeditor5-markdown-gfm/src/markdown.js';
 import MediaEmbed from '@ckeditor/ckeditor5-media-embed/src/mediaembed.js';
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph.js';
 import PasteFromOffice from '@ckeditor/ckeditor5-paste-from-office/src/pastefromoffice.js';
+import SelectAll from '@ckeditor/ckeditor5-select-all/src/selectall.js';
+import SimpleUploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/simpleuploadadapter.js';
+import SpecialCharacters from '@ckeditor/ckeditor5-special-characters/src/specialcharacters.js';
 import Table from '@ckeditor/ckeditor5-table/src/table.js';
+import TableCellProperties from '@ckeditor/ckeditor5-table/src/tablecellproperties';
 import TableColumnResize from '@ckeditor/ckeditor5-table/src/tablecolumnresize.js';
 import TableToolbar from '@ckeditor/ckeditor5-table/src/tabletoolbar.js';
 import TextTransformation from '@ckeditor/ckeditor5-typing/src/texttransformation.js';
@@ -35,6 +41,7 @@ class Editor extends ClassicEditor {}
 
 // Plugins to include in the build.
 Editor.builtinPlugins = [
+	Alignment,
 	Autoformat,
 	BlockQuote,
 	Bold,
@@ -54,10 +61,15 @@ Editor.builtinPlugins = [
 	Italic,
 	Link,
 	List,
+	Markdown,
 	MediaEmbed,
 	Paragraph,
 	PasteFromOffice,
+	SelectAll,
+	SimpleUploadAdapter,
+	SpecialCharacters,
 	Table,
+	TableCellProperties,
 	TableColumnResize,
 	TableToolbar,
 	TextTransformation,
@@ -73,13 +85,15 @@ Editor.defaultConfig = {
 			'bold',
 			'underline',
 			'italic',
-			'link',
-			'bulletedList',
-			'numberedList',
 			'|',
 			'fontSize',
 			'fontColor',
 			'fontFamily',
+			'alignment',
+			'|',
+			'link',
+			'bulletedList',
+			'numberedList',
 			'|',
 			'outdent',
 			'indent',
@@ -89,7 +103,9 @@ Editor.defaultConfig = {
 			'insertTable',
 			'mediaEmbed',
 			'undo',
-			'redo'
+			'redo',
+			'|',
+			'specialCharacters'
 		]
 	},
 	language: 'en',
@@ -106,7 +122,8 @@ Editor.defaultConfig = {
 		contentToolbar: [
 			'tableColumn',
 			'tableRow',
-			'mergeTableCells'
+			'mergeTableCells',
+			'tableCellProperties'
 		]
 	}
 };
