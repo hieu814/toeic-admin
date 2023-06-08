@@ -59,8 +59,8 @@ const ExamModal = (props) => {
             addExam(values)
                 .then(async (respond) => {
 
-                    if (respond.data.data.id && values.random) {
-                        await updateQuestions(respond.data.data.id, values.type).then(async (respond) => {
+                    if (respond.data.id && values.random) {
+                        await updateQuestions(respond.data.id, values.type).then(async (respond) => {
                             message.success(respond.message)
                             handleCalcel()
                         })
@@ -83,8 +83,9 @@ const ExamModal = (props) => {
             updateExam(values)
                 .unwrap()
                 .then(async (respond) => {
-                    if (respond.data.data.id && values.random) {
-                        await updateQuestions(respond.data.data.id, values.type).then(async (respond) => {
+                    console.log(respond);
+                    if (respond.data.id && values.random) {
+                        await updateQuestions(respond.data.id, values.type).then(async (respond) => {
                             message.success(respond.message)
                             handleCalcel()
                         })
@@ -148,7 +149,8 @@ const ExamModal = (props) => {
                 query: [
                     {
                         $match: {
-                            type: type
+                            type: type,
+                            random: false
                         }
                     },
                     { $sample: { size: questionsCntMap[type] ?? 0, } }
@@ -166,7 +168,7 @@ const ExamModal = (props) => {
                     var array = responses[i].data.data ?? []
                     if (examType === 0 && array.length > 0 && (array[0].type === 6 || array[0].type === 7)) {
                         array = getRandomReading(array, array[0].type === 7 ? 54 : 16)
-                        console.log({ reading: array });
+                        // console.log({ reading: array });
                     }
                     allQuestions = allQuestions.concat(array);
                 }
@@ -184,7 +186,7 @@ const ExamModal = (props) => {
                     const _questions = obj.questions.map(question => {
                         return { ...question, number: currentQuestionNum++ };
                     });
-                    return { ...obj, questions: _questions, group: _questions.length < 2 ? `${_questions[0].number}` : `${_questions[0].number}-${_questions[_questions.length - 1].number}` };
+                    return { ...obj, questions: _questions, random: true,group: _questions.length < 2 ? `${_questions[0].number}` : `${_questions[0].number}-${_questions[_questions.length - 1].number}` };
                 });
                 return convertedArray
 
