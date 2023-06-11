@@ -43,7 +43,7 @@ export default function MyEditor({ onChange, ...props }) {
         };
     }
     function handleChange(event, editor) {
-        const data = editor.getData();
+        const data = editor.getData({ options: { output: 'text' } });
         console.log({ event, editor, data });
         onChange(data)
     }

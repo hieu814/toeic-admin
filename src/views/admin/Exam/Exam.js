@@ -38,10 +38,10 @@ const ExamManagementPage = () => {
             findAllExams(buidQuery({
                 searchField: ["name"],
                 search: search,
-                // queryField: {
-                //     type: type
-                // },
-                populate:'questions',
+                queryField: {
+                    category: type
+                },
+                populate: 'questions',
                 page: page,
                 rowsPerPage: rowsPerPage,
             }));

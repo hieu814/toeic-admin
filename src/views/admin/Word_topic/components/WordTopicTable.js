@@ -35,7 +35,7 @@ export default function MyTable(props) {
     const columns = [
         {
             name: 'ID',
-            selector: (row, i) => row.id,
+            selector: (row, i) => row.image,
             sortable: true,
         },
         {

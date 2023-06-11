@@ -70,6 +70,7 @@ const ArticleModal = (props) => {
 
     };
     const handleEditorChange = (html) => {
+        console.log(html);
         setContent(html);
     };
     function handleCalcel() {

@@ -188,7 +188,7 @@ function parseQuestion(data) {
     } else {
         group = questions.length < 2 ? `${questions[0].number}` : `${questions[0].number}-${questions[questions.length - 1].number}`
     }
-    return { type: data?.type || 0, group, questions, transcript: data.transcript || "" };
+    return { type: data?.type || 0, group, questions, transcript: data.transcript || "", image: data.image || "", audio: data.audio || "" };
 }
 function parseExcelFile(file) {
     return new Promise((resolve, reject) => {
@@ -206,6 +206,19 @@ function parseExcelFile(file) {
         };
         reader.readAsArrayBuffer(file);
     });
+}
+function createExcelFile(data, filename) {
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+    const excelFileData = XLSX.write(workbook, { type: 'array', bookType: 'xlsx' });
+    const excelFileBlob = new Blob([excelFileData], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const downloadURL = URL.createObjectURL(excelFileBlob);
+    const link = document.createElement('a');
+    link.href = downloadURL;
+    link.download = filename;
+    link.click();
+    URL.revokeObjectURL(downloadURL);
 }
 const isValidObjectId = (id) => {
     return objectIdRegex.test(id);
@@ -229,5 +242,6 @@ export {
     downloadCSV,
     convertKeysToLowercase,
     checkUrl,
-    isValidObjectId
+    isValidObjectId,
+    createExcelFile
 }

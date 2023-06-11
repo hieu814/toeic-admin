@@ -9,7 +9,7 @@ import { useBulkInsertQuestionsMutation, useFindAllQuestionsMutation, useBulkUpd
 import Papa from 'papaparse';
 import { UploadOutlined } from '@ant-design/icons';
 import { uploadFileApi } from 'src/api/upload';
-import { buidQuery, getQuestionName, parseExcelFile, parseQuestion } from 'src/common/Funtion';
+import { buidQuery, createExcelFile, getQuestionName, parseExcelFile, parseQuestion } from 'src/common/Funtion';
 import { useGetExamQuery, useUpdateExamMutation } from 'src/api/exam';
 const { Option } = Select;
 
@@ -27,10 +27,10 @@ const ImportModal = (props) => {
     const [bulkUpdateQuestions] = useBulkUpdateQuestionsMutation();
     const [updateQuestion] = useUpdateQuestionMutation();
     const onFinish = async () => {
-        console.log("onFinish ", type);
+
         setIsloading(true)
         try {
-            if (type !== 5 && fileList.length < 1) return
+            if ((type !== 1 && type !== 5) && fileList.length < 1) return
             if (type === 4) {
                 await importAudio()
             } else if (type == 3) {
@@ -38,18 +38,14 @@ const ImportModal = (props) => {
             } else if (type === 2) {
                 await importQuestion()
             } else if (type === 1) {
-                // console.log("to csv");
-                // getQuestions().then((quesions) => {
-                //     downloadCSV(quesions)
-
-                // })
-                csvToJson(fileList[0])
+                await exportData()
 
             } else if (type === 5) {
                 await importAnswers()
-                return
             }
-
+            else if (type === 6) {
+                await importTranscripts()
+            }
 
         } catch (error) {
             console.error(error);
@@ -73,7 +69,6 @@ const ImportModal = (props) => {
         });
     }
     function getQuestions() {
-        console.log("getQuestions");
         return new Promise((resolve, reject) => {
             var _query = { _id: { $in: exam?.data.questions || [] } }
             findAllQuestions(buidQuery({
@@ -95,17 +90,20 @@ const ImportModal = (props) => {
     function importQuestion() {
         return new Promise((resolve, reject) => {
             var examType = exam?.data.type ?? 0
-            // console.log({ examType });
             parseExcelFile(fileList[0]).then((arr) => {
                 var _question = []
                 arr.forEach((val) => {
                     if (val?.question) {
+
                         var qs = parseQuestion({
                             questions: val?.question ?? "",
                             answers: val?.answers ?? "",
                             type: val?.type ?? 0,
-                            transcript: val?.transcript ?? ""
+                            transcript: val?.transcript ?? "",
+                            image: val?.image ?? "",
+                            audio: val?.audio ?? ""
                         })
+
                         if (examType <= 1 || (examType - 1) == (val?.type))
                             _question.push(qs)
                     }
@@ -118,7 +116,6 @@ const ImportModal = (props) => {
                         (quesion.questions ?? []).forEach((val) => {
 
                             _questioFormatted.push({ ...quesion, questions: [{ ...val }], group: `${val.number}` })
-                            // console.log("find padt d", _questioFormatted[_questioFormatted.length - 1]);
                         })
 
                     } else if (quesion.type == 3 || quesion.type == 4) {
@@ -153,7 +150,6 @@ const ImportModal = (props) => {
                             }
 
                             _questioFormatted = _questioFormatted.concat(array2)
-                            console.log({ array2, _questioFormatted });
                         } else {
                             _questioFormatted.push({ ...quesion })
                         }
@@ -163,14 +159,12 @@ const ImportModal = (props) => {
                     }
 
                 })
-                console.log(_questioFormatted);
                 bulkInsertQuestion({
                     data: _questioFormatted
                 })
                     .unwrap()
                     .then((respond) => {
                         message.success(respond.message)
-                        // console.log(respond?.data || []);
                         updateExam({
                             id: examId,
                             $addToSet: { questions: respond?.data || [] }
@@ -225,7 +219,6 @@ const ImportModal = (props) => {
                         var _quesionsTemp = Array.from((quesions), (qs) => {
                             return { ...qs, audio: _questionWithfileName[qs?.group] }
                         })
-                        // console.log({ _quesionsTemp });
                         updateManyQuestion(_quesionsTemp).then(datas => {
                             resolve("ok")
                         }).catch(err => {
@@ -238,7 +231,63 @@ const ImportModal = (props) => {
             }
         });
     }
+    function exportData() {
+        return new Promise((resolve, reject) => {
+            try {
 
+                getQuestions().then((groupQuesions) => {
+                    var arrayData = []
+                    groupQuesions.forEach(groupQuesion => {
+                        var questionString = ""
+                        var answerString = ""
+                        groupQuesion.questions.forEach(obj => {
+                            answerString += obj.correct_answer + "\n"
+                            questionString += `${obj.number}. ${obj.question ?? ""}\n(A) ${obj.A ?? ""}\n(B) ${obj.B ?? ""}\n(C) ${obj.C ?? ""}\n${obj.D ? `(D) ${obj.D ?? ""}` : ""}\n`
+                        });
+
+                        arrayData.push({
+                            question: questionString,
+                            answers: answerString,
+                            type: groupQuesion.type ?? 0,
+                            transcript: groupQuesion.transcript ?? "",
+                            image: groupQuesion.image ?? "",
+                            audio: groupQuesion.audio ?? ""
+                        })
+                    });
+                    arrayData.sort((a, b) => a.type - b.type);
+                    createExcelFile(arrayData, `${exam?.data.name ?? "data"}.xlsx`)
+                    resolve("ok")
+                })
+
+
+
+            } catch (error) {
+                reject(error)
+            }
+        });
+    }
+    function importTranscripts() {
+        return new Promise((resolve, reject) => {
+            try {
+                parseExcelFile(fileList[0]).then((transcripts) => {
+                    getQuestions().then((quesions) => {
+                        var _quesionsTemp = Array.from((transcripts), (transcript) => {
+                            var qs = quesions.find(obj => transcript.number === obj?.group);
+                            return { id: qs?.id ?? "", transcript: transcript.transcript ?? "" }
+                        })
+                        updateManyQuestion(_quesionsTemp).then(datas => {
+                            resolve("ok")
+                        }).catch(err => {
+                            reject(err); // Reject if updateManyQuestion() fails
+                        })
+                    })
+                })
+
+            } catch (error) {
+                reject(error)
+            }
+        });
+    }
     function importImage() {
         return new Promise((resolve, reject) => {
             try {
@@ -249,7 +298,7 @@ const ImportModal = (props) => {
                 uploadFileApi(formData).then((res) => {
                     var _fileName = res?.data?.uploadSuccess || []
                     var _questionWithfileName = _fileName.reduce(function (map, obj) {
-                        map[`${getQuestionName(obj.name)}`] = obj.path;
+                        map[`${getQuestionName(obj.name)} `] = obj.path;
                         return map;
                     }, {});
                     getQuestions().then((quesions) => {
@@ -318,12 +367,12 @@ const ImportModal = (props) => {
                     Cancel
                 </Button>,
                 <Button loading={isloading} key="update" onClick={onFinish} type="primary" >
-                    {`${isInsert ? "Insert" : "Update"}`}
+                    {`${isInsert ? "Insert" : "Update"} `}
                 </Button>,
             ]}
         >
 
-            {(errorMsg) && <div style={{ color: 'red', marginBottom: 10 }}>{`${errorMsg}`}</div>}
+            {(errorMsg) && <div style={{ color: 'red', marginBottom: 10 }}>{`${errorMsg} `}</div>}
             <Form.Item label="Type">
                 <Select
                     defaultValue={type}
@@ -331,11 +380,12 @@ const ImportModal = (props) => {
                         setType(val)
                     }}
                     placeholder="Select type">
-                    {/* <Option key={1} value={1}>CSV</Option> */}
+                    <Option key={1} value={1}>Export</Option>
                     <Option key={4} value={2}>Question</Option>
                     <Option key={2} value={3}>Image</Option>
                     <Option key={3} value={4}>Audio</Option>
                     <Option key={5} value={5}>Answers</Option>
+                    <Option key={6} value={6}>Transcript</Option>
                 </Select>
             </Form.Item>
             {type !== 5 && <Form.Item label="File">
