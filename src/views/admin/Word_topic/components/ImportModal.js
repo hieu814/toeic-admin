@@ -33,11 +33,13 @@ const ImportModal = (props) => {
             fileReader.onload = async (e) => {
 
                 const text = e.target.result;
-                const arr = await csv().fromString(text);
+                const arr = await csv({
+                    delimiter: '|', // Set the delimiter to a custom character, such as '|'
+                }).fromString(text);
                 var set = 0
                 var data = []
-                console.log(arr.length);
-
+                console.log(arr);
+                return
                 for (let i = 0; i < arr.length; i++, set++) {
                     await importTopic(arr[i])
 
